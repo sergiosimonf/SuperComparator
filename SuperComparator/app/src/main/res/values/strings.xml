@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Comparator</string>
+    <string name="compareitor">Compareitor\n</string>
+    <string name="app_slogan">Compra descubre compara</string>
+    <string name="register">Registrer now</string>
+    <string name="login">Login in</string>
+</resources>
