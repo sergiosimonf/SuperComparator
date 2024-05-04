@@ -23,6 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.tfg.supercomparator.ui.theme.DarkGreen
+import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.LightBlueWhite
 import com.tfg.supercomparator.ui.theme.bluishGray
 
@@ -56,10 +58,11 @@ fun SocialMediaLognIn(
 }
 
 fun Modifier.socialMedia(): Modifier = composed {
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
     this.then(
         if (isSystemInDarkTheme()) {
             background(Color.Transparent)
-                .border(width = 1.dp, color = bluishGray, shape = RoundedCornerShape(4.dp))
+                .border(width = 1.dp, color = uiColor, shape = RoundedCornerShape(4.dp))
         } else {
             background(LightBlueWhite)
         }

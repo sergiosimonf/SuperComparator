@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.tfg.supercomparator.ui.theme.Black
+import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.focusedTextFieldText
 import com.tfg.supercomparator.ui.theme.textFieldContainer
 import com.tfg.supercomparator.ui.theme.unfocusedTextFieldText
@@ -28,7 +29,7 @@ fun LoginTextField(
     label: String,
     trailing: String
 ) {
-    val uiColor = if (isSystemInDarkTheme()) Color.White else Black
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Black
 
     TextField(
         modifier = modifier,

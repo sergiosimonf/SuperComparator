@@ -1,6 +1,5 @@
 package com.tfg.supercomparator.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,13 +24,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -49,21 +45,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.ui.navigation.AppScreens
-import com.tfg.supercomparator.ui.theme.Black
+import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.GrayBanished
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.Roboto
-import com.tfg.supercomparator.ui.theme.bluishGray
 import com.tfg.supercomparator.ui.view.components.LoginTextField
 import com.tfg.supercomparator.ui.view.components.RegisterTextField
 import com.tfg.supercomparator.ui.view.components.SocialMediaLognIn
+import com.tfg.supercomparator.viewModel.LoginViewModel
 
 @Preview
 @Composable
 fun LoginScreen(
     navController: NavHostController = rememberNavController(),
+    viewModel: LoginViewModel = LoginViewModel()
 ) {
-    Surface {
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+    Surface(color = uiColor) {
         Box(
             contentAlignment = Alignment.TopCenter
         ) {
@@ -81,7 +79,7 @@ fun LoginScreen(
                         .padding(horizontal = 25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    RegisterSection()
+                    LoginSection(navController, viewModel)
                     Spacer(modifier = Modifier.height(30.dp))
                     SocialMediaSection()
                     DontHaveAccountSecction(navController)
@@ -93,7 +91,8 @@ fun LoginScreen(
 
 @Composable
 private fun DontHaveAccountSecction(navController: NavHostController) {
-    val uiColor = if (isSystemInDarkTheme()) Color.White else Black
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
     Row(
         modifier = Modifier
             .fillMaxHeight(fraction = 0.8f)
@@ -117,7 +116,7 @@ private fun DontHaveAccountSecction(navController: NavHostController) {
         ClickableText(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    color = if (isSystemInDarkTheme()) bluishGray else Green,
+                    color = uiColor,
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Medium,
@@ -134,10 +133,11 @@ private fun DontHaveAccountSecction(navController: NavHostController) {
 
 @Composable
 private fun SocialMediaSection() {
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = "Or continue with",
-            style = MaterialTheme.typography.labelMedium.copy(color = GrayBanished)
+            style = MaterialTheme.typography.labelMedium.copy(color = uiColor)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Row(
@@ -162,12 +162,13 @@ private fun SocialMediaSection() {
 }
 
 @Composable
-private fun RegisterSection() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordMode by remember { mutableStateOf(true) }
+private fun LoginSection(navController: NavHostController, viewModel: LoginViewModel) {
+    val email: String by viewModel.email.observeAsState(initial = "")
+    val password by viewModel.password.observeAsState(initial = "")
+    val passwordMode by viewModel.passwordMode.observeAsState(initial = true)
 
-    val uiColor = if (isSystemInDarkTheme()) Color(0xFFFFFBFC) else Color(0xFFEADEDA)
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -187,14 +188,13 @@ private fun RegisterSection() {
             )
             addStyle(
                 style = SpanStyle(
-                    color = if (isSystemInDarkTheme()) bluishGray else Green,
+                    color = uiColor,
                     fontFamily = FontFamily(Font(R.font.inter_medium))
                 ),
                 start = 0,
                 end = loginWord.length
             )
         }
-
         Text(
             modifier = Modifier
                 .fillMaxWidth()
@@ -204,13 +204,11 @@ private fun RegisterSection() {
             fontSize = 22.sp,
         )
     }
-
     Spacer(modifier = Modifier.height(25.dp))
-
     LoginTextField(
         label = "Email",
         value = email,
-        onValueChange = { email = it },
+        onValueChange = { viewModel.onLoginChanged(it, password) },
         passwordMode = false,
         trailing = "",
         modifier = Modifier.fillMaxWidth()
@@ -219,14 +217,12 @@ private fun RegisterSection() {
     RegisterTextField(
         label = "Password",
         value = password,
-        onValueChange = { password = it },
-        onIconButtonClick = { passwordMode = !passwordMode },
+        onValueChange = { viewModel.onLoginChanged(email, it) },
+        onIconButtonClick = { viewModel.changePasswordMode(passwordMode) },
         passwordTextField = true,
         textPassWordMode = passwordMode,
         modifier = Modifier.fillMaxWidth()
     )
-
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -236,7 +232,7 @@ private fun RegisterSection() {
         ClickableText(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    color = Green,
+                    color = uiColor,
                     fontSize = 12.sp,
                     fontFamily = Roboto,
                 )
@@ -249,9 +245,9 @@ private fun RegisterSection() {
     Spacer(modifier = Modifier.height(20.dp))
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {},
+        onClick = {navController.navigate(AppScreens.DASHBOARD.ruta)},
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) bluishGray else Green,
+            containerColor = uiColor,
             contentColor = Color.White
         ),
         shape = RoundedCornerShape(size = 4.dp)
@@ -266,15 +262,6 @@ private fun RegisterSection() {
 @Composable
 private fun TopSection() {
     val uiColor = if (isSystemInDarkTheme()) Color(0xFFFFFBFC) else Color(0xFFFFFBFC)
-
-    Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(fraction = 0.42f),
-        painter = painterResource(id = R.drawable.green_square),
-        contentDescription = null,
-        contentScale = ContentScale.FillBounds
-    )
 
     Row(
         modifier = Modifier

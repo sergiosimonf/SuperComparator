@@ -1,6 +1,5 @@
 package com.tfg.supercomparator.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,19 +19,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -50,19 +47,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.ui.navigation.AppScreens
-import com.tfg.supercomparator.ui.theme.Black
+import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.GrayBanished
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.Roboto
-import com.tfg.supercomparator.ui.theme.bluishGray
 import com.tfg.supercomparator.ui.view.components.RegisterTextField
+import com.tfg.supercomparator.viewModel.RegisterViewModel
 
 @Preview
 @Composable
 fun RegisterScreen(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    viewModel: RegisterViewModel = RegisterViewModel(navController)
 ) {
-    Surface {
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
+    Surface(color = uiColor) {
         Box(
             contentAlignment = Alignment.TopCenter
         ) {
@@ -80,9 +80,9 @@ fun RegisterScreen(
                         .padding(horizontal = 25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    RegisterSection()
+                    RegisterSection(viewModel)
                     Spacer(modifier = Modifier.height(10.dp))
-                    LoginSection(navController)
+                    RegisterSectionBotom(navController, viewModel)
                 }
             }
 
@@ -92,9 +92,9 @@ fun RegisterScreen(
 
 
 @Composable
-private fun LoginSection(navController: NavHostController) {
-    val uiColor = if (isSystemInDarkTheme()) Color.White else Black
-    var passwordRecover by remember { mutableStateOf(false) }
+private fun RegisterSectionBotom(navController: NavHostController, viewModel: RegisterViewModel) {
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+    val passwordRecoverMode by viewModel.passwordRecoverMode.observeAsState(initial = false)
 
     Column {
         Row(
@@ -120,10 +120,14 @@ private fun LoginSection(navController: NavHostController) {
                         }
                     },
                     onClick = {
-                        passwordRecover = !passwordRecover
+                        viewModel.changePasswordRecoverMode(passwordRecoverMode)
                     },
                 )
-                Checkbox(checked = passwordRecover, onCheckedChange = { passwordRecover = it })
+                Checkbox(
+                    checked = passwordRecoverMode,
+                    onCheckedChange = { viewModel.changePasswordRecoverMode(passwordRecoverMode) },
+                    colors = CheckboxDefaults.colors(uiColor)
+                )
             }
         }
         Row(
@@ -147,34 +151,33 @@ private fun LoginSection(navController: NavHostController) {
                 }
             })
             Spacer(modifier = Modifier.width(5.dp))
-            ClickableText(
-                text = buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            color = if (isSystemInDarkTheme()) bluishGray else Green,
-                            fontSize = 14.sp,
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Medium,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    ) {
-                        append("Sign in")
-                    }
-                },
-                onClick = {
-                    navController.navigate(AppScreens.LOGIN.ruta)
+            ClickableText(text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = uiColor,
+                        fontSize = 14.sp,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Medium,
+                        textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    append("Sign in")
                 }
-            )
+            }, onClick = {
+                navController.navigate(AppScreens.LOGIN.ruta)
+            })
         }
     }
 }
 
 @Composable
-private fun RegisterSection() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var repeatPassword by remember { mutableStateOf("") }
-    var passwordMode by remember { mutableStateOf(true) }
+private fun RegisterSection(viewModel: RegisterViewModel) {
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
+    val email by viewModel.email.observeAsState(initial = "")
+    val password by viewModel.password.observeAsState(initial = "")
+    val repeatPassword by viewModel.repeatPassword.observeAsState(initial = "")
+    val passwordMode by viewModel.passwordMode.observeAsState(initial = true)
 
     val loginText = "Register a new account."
     val loginWord = "Register"
@@ -183,22 +186,15 @@ private fun RegisterSection() {
         append(loginText)
         addStyle(
             style = SpanStyle(
-                color = Color.Gray,
-                fontFamily = FontFamily(Font(R.font.inter_medium))
-            ),
-            start = 0,
-            end = loginText.length
+                color = Color.Gray, fontFamily = FontFamily(Font(R.font.inter_medium))
+            ), start = 0, end = loginText.length
         )
         addStyle(
             style = SpanStyle(
-                color = if (isSystemInDarkTheme()) bluishGray else Green,
-                fontFamily = FontFamily(Font(R.font.inter_medium))
-            ),
-            start = 0,
-            end = loginWord.length
+                color = uiColor, fontFamily = FontFamily(Font(R.font.inter_medium))
+            ), start = 0, end = loginWord.length
         )
     }
-
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -207,14 +203,11 @@ private fun RegisterSection() {
         textAlign = TextAlign.Center,
         fontSize = 22.sp,
     )
-
     Spacer(modifier = Modifier.height(25.dp))
-
-
     RegisterTextField(
         label = "Email",
         value = email,
-        onValueChange = { email = it },
+        onValueChange = { viewModel.onRegisterChanged(it, password, repeatPassword) },
         onIconButtonClick = {},
         passwordTextField = false,
         textPassWordMode = false,
@@ -224,8 +217,8 @@ private fun RegisterSection() {
     RegisterTextField(
         label = "Password",
         value = password,
-        onValueChange = { password = it },
-        onIconButtonClick = { passwordMode = !passwordMode },
+        onValueChange = { viewModel.onRegisterChanged(email, it, repeatPassword) },
+        onIconButtonClick = { viewModel.changePasswordMode(passwordMode) },
         passwordTextField = true,
         textPassWordMode = passwordMode,
         modifier = Modifier.fillMaxWidth()
@@ -234,21 +227,17 @@ private fun RegisterSection() {
     RegisterTextField(
         label = "Repeat password",
         value = repeatPassword,
-        onValueChange = { repeatPassword = it },
-        onIconButtonClick = { passwordMode = !passwordMode },
+        onValueChange = { viewModel.onRegisterChanged(email, password, it) },
+        onIconButtonClick = { viewModel.changePasswordMode(passwordMode) },
         passwordTextField = true,
         textPassWordMode = passwordMode,
         modifier = Modifier.fillMaxWidth()
     )
     Spacer(modifier = Modifier.height(20.dp))
     Button(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = {},
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) bluishGray else Green,
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(size = 4.dp)
+        modifier = Modifier.fillMaxWidth(), onClick = {}, colors = ButtonDefaults.buttonColors(
+            containerColor = uiColor, contentColor = Color.White
+        ), shape = RoundedCornerShape(size = 4.dp)
     ) {
         Text(
             text = "Register now",
@@ -262,15 +251,6 @@ private fun RegisterSection() {
 private fun TopSection() {
     val uiColor = if (isSystemInDarkTheme()) Color(0xFFFFFBFC) else Color(0xFFFFFBFC)
 
-    Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(fraction = 0.42f),
-        painter = painterResource(id = R.drawable.green_square),
-        contentDescription = null,
-        contentScale = ContentScale.FillBounds
-    )
-
     Row(
         modifier = Modifier
             .padding(top = 35.dp)
@@ -278,8 +258,7 @@ private fun TopSection() {
         horizontalArrangement = Arrangement.SpaceAround,
     ) {
         Column(
-            modifier = Modifier
-                .weight(0.30f),
+            modifier = Modifier.weight(0.30f),
         ) {
 
             Icon(

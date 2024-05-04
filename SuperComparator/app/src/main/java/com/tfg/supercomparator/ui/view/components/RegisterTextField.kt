@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.ui.theme.Black
+import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.focusedTextFieldText
 import com.tfg.supercomparator.ui.theme.textFieldContainer
 import com.tfg.supercomparator.ui.theme.unfocusedTextFieldText
@@ -34,7 +35,7 @@ fun RegisterTextField(
     textPassWordMode: Boolean,
     label: String
 ) {
-    val uiColor = if (isSystemInDarkTheme()) Color.White else Black
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Black
 
     TextField(
         modifier = modifier,

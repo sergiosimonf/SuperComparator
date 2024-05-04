@@ -9,6 +9,7 @@ object Destination {
     const val REGISTER = "Register"
 }
 
+// No funciona
 class Actions(navController: NavHostController) {
 
     val goRegisterScreen: () -> Unit = {
@@ -23,6 +24,7 @@ class Actions(navController: NavHostController) {
 sealed class AppScreens(val ruta: String) {
     data object LOGIN: AppScreens(ruta = "login")
     data object REGISTER: AppScreens("register")
+    data object DASHBOARD: AppScreens("dashboard")
     data object IMAGE: AppScreens("image")
     data object MOVABLE: AppScreens("movable")
     data object SPLASHSCREEN: AppScreens("splashscreen")
