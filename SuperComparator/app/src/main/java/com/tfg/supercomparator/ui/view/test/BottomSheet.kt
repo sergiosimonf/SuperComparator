@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -128,7 +127,7 @@ fun ModalBottomSheetss() {
                     Text(text = "Pin or Unpin")
                 }
                 Button(onClick = {
-                    if (!scaffoldState.bottomSheetState.isVisible){
+                    if (!scaffoldState.bottomSheetState.isVisible) {
                         scope.launch {
                             scaffoldState.bottomSheetState.expand()
                         }

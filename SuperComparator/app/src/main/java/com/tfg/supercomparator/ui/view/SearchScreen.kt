@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,66 +27,98 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tfg.supercomparator.R
-import com.tfg.supercomparator.ui.view.components.DockedSearchBarM3
-import com.tfg.supercomparator.ui.view.components.ModalBottomSheets
+import com.tfg.supercomparator.ui.view.components.ProductContentSearch
+import com.tfg.supercomparator.ui.view.components.SearchBarSuperProducts
+import com.tfg.supercomparator.viewModel.SearchScreemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
-fun SearchScreen() {
-
+fun SearchScreen(
+    viewModel: SearchScreemViewModel = SearchScreemViewModel()
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
-        DockedSearchBarM3()
+        SearchBarSuperProducts(viewModel)
         Spacer(modifier = Modifier.height(25.dp))
-        SupercMarketsIcons()
-        ModalBottomSheets()
+        SupercMarketsIcons(viewModel)
+        Spacer(modifier = Modifier.height(25.dp))
+        Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxHeight()) {
+            ProductContentSearch(viewModel)
+        }
     }
 }
 
 @Composable
-fun SupercMarketsIcons() {
+fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
+
+    val ahorramasIconSearch: Boolean by viewModel.ahorramasIconSearch.observeAsState(initial = false)
+    val alcampoIconSearch: Boolean by viewModel.alcampoIconSearch.observeAsState(initial = false)
+    val carrefourIconSearch: Boolean by viewModel.carrefourIconSearch.observeAsState(initial = false)
+    val diaIconSearch: Boolean by viewModel.diaIconSearch.observeAsState(initial = false)
+    val eroskiIconSearch: Boolean by viewModel.eroskiIconSearch.observeAsState(initial = false)
+    val hipercorIconSearch: Boolean by viewModel.hipercorIconSearch.observeAsState(initial = false)
+    val mercadonaSearch: Boolean by viewModel.mercadonaSearch.observeAsState(initial = false)
+
+    val ahorraMasIcon =
+        if (ahorramasIconSearch) R.drawable.ahorramas else R.drawable.ahorramas_unactive
+    val alcampoIcon = if (alcampoIconSearch) R.drawable.alcampo else R.drawable.alcampo_unactive
+    val carrefourIcon =
+        if (carrefourIconSearch) R.drawable.carrefour else R.drawable.carrefour_unactive
+    val diaIcon = if (diaIconSearch) R.drawable.dia else R.drawable.dia_unactive
+    val eroskiIcon = if (eroskiIconSearch) R.drawable.eroski else R.drawable.eroski_unactive
+    val hipercorIcon = if (hipercorIconSearch) R.drawable.hipercor else R.drawable.hipercor_unative
+    val mercadonaIcon = if (mercadonaSearch) R.drawable.mercadona else R.drawable.mercadona_unactive
 
     val padding = 22.dp
     val imageSize = 50.dp
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = padding)) {
+            IconButton(
+                onClick = { viewModel.onTouchAhorramasIconSearch() },
+                modifier = Modifier.padding(end = padding)
+            ) {
                 Card(modifier = Modifier.clip(RoundedCornerShape(11.dp))) {
                     Image(
-                        painter = painterResource(id = R.drawable.ahorramas),
+                        painter = painterResource(id = ahorraMasIcon),
                         contentDescription = null,
                         modifier = Modifier
                             .height(imageSize)
                     )
                 }
             }
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = padding)) {
+            IconButton(
+                onClick = { viewModel.onTouchAlcampoIconSearch() },
+                modifier = Modifier.padding(end = padding)
+            ) {
                 Card(modifier = Modifier.clip(RoundedCornerShape(11.dp))) {
                     Image(
-                        painter = painterResource(id = R.drawable.alcampo),
+                        painter = painterResource(id = alcampoIcon),
                         contentDescription = null,
                         modifier = Modifier
                             .height(imageSize)
                     )
                 }
             }
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = padding)) {
+            IconButton(
+                onClick = { viewModel.onTouchCarrefourIconSearch() },
+                modifier = Modifier.padding(end = padding)
+            ) {
                 Image(
-                    painter = painterResource(id = R.drawable.carrefour),
+                    painter = painterResource(id = carrefourIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .height(imageSize)
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { viewModel.onTouchDiaIconSearch() }) {
                 Image(
-                    painter = painterResource(id = R.drawable.dia),
+                    painter = painterResource(id = diaIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .height(imageSize)
@@ -93,27 +128,35 @@ fun SupercMarketsIcons() {
         }
         Spacer(modifier = Modifier.height(25.dp))
         Row(horizontalArrangement = Arrangement.Center) {
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = padding)) {
+            IconButton(
+                onClick = { viewModel.onTouchEroskiIconSearch() },
+                modifier = Modifier.padding(end = padding)
+            ) {
                 Card(modifier = Modifier.clip(RoundedCornerShape(11.dp))) {
                     Image(
-                        painter = painterResource(id = R.drawable.eroski),
+                        painter = painterResource(id = eroskiIcon),
                         contentDescription = null,
                         modifier = Modifier
                             .height(imageSize)
                     )
                 }
             }
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = padding)) {
+            IconButton(
+                modifier = Modifier.padding(end = padding),
+                onClick = { }
+//                onClick = { viewModel.onTouchHipercorIconSearch() }
+            ) {
                 Image(
-                    painter = painterResource(id = R.drawable.hipercor),
+                    painter = painterResource(id = hipercorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .height(imageSize)
                 )
             }
             IconButton(onClick = { /*TODO*/ }) {
+//            onClick = { viewModel.onTouchMercadonaIconSearch() }
                 Image(
-                    painter = painterResource(id = R.drawable.mercadona),
+                    painter = painterResource(id = mercadonaIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .height(imageSize)

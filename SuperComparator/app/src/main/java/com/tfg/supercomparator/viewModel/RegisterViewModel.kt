@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
-import com.tfg.supercomparator.ui.navigation.Actions
 
 class RegisterViewModel(private val navController: NavHostController) : ViewModel() {
 
@@ -17,10 +16,10 @@ class RegisterViewModel(private val navController: NavHostController) : ViewMode
     private val _repeatPassword = MutableLiveData<String>()
     val repeatPassword: LiveData<String> = _repeatPassword
 
-    private val _passwordMode = MutableLiveData<Boolean>()
+    private val _passwordMode = MutableLiveData<Boolean>().apply { value = true }
     val passwordMode = _passwordMode
 
-    private val _passwordRecoverMode = MutableLiveData<Boolean>()
+    private val _passwordRecoverMode = MutableLiveData<Boolean>().apply { value = false }
     val passwordRecoverMode: LiveData<Boolean> = _passwordRecoverMode
 
     fun onRegisterChanged(email: String, password: String, repeatPassword: String) {
@@ -29,11 +28,11 @@ class RegisterViewModel(private val navController: NavHostController) : ViewMode
         _repeatPassword.value = repeatPassword
     }
 
-    fun changePasswordMode(passwordMode: Boolean) {
-        _passwordMode.value = !passwordMode
+    fun changePasswordMode() {
+        _passwordMode.value = _passwordMode.value?.not()
     }
 
-    fun changePasswordRecoverMode(passwordRecoverMode: Boolean) {
-        _passwordRecoverMode.value = !passwordRecoverMode
+    fun changePasswordRecoverMode() {
+        _passwordRecoverMode.value = _passwordRecoverMode.value?.not()
     }
 }

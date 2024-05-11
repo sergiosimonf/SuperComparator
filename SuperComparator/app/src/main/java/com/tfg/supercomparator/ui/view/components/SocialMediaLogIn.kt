@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.LightBlueWhite
-import com.tfg.supercomparator.ui.theme.bluishGray
 
 @Composable
 fun SocialMediaLognIn(

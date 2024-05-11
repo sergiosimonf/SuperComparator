@@ -15,6 +15,7 @@ val oldLace = Color(0xFFBBBBBB)
 val GrayBanished = Color(0xFFAAAAAA)
 
 val Green = Color(0xFF1AA57B)
+val LightGreen = Color(0xFFDBE4DB)
 val DarkGreen = Color(0xFF1D2922)
 
 val Black = Color(0xFF000113)

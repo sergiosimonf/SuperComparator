@@ -9,16 +9,5 @@ interface DiaQuoteService {
     @GET("search-back/search/reduced?")
     suspend fun getDiaProduct(
         @Query("q") q: String
-    ): Call<Dia>
+    ): Dia
 }
-
-//"prices": {
-//    "currency": "EUR",
-//    "discount_percentage": 0,
-//    "is_club_price": false,
-//    "is_promo_price": false,
-//    "measure_unit": "LITRO", /////////////////////////////
-//    "price": 3.72,
-//    "price_per_unit": 0.94, /////////////////////////////////////////////
-//    "strikethrough_price": 3.72 // Precio sin oferta
-//},

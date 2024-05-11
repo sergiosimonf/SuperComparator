@@ -33,11 +33,11 @@ fun ListImageController() {
 
     var list: MutableList<Item> = mutableListOf()
 
-    Row (
+    Row(
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
             .padding(10.dp)
-    ){
+    ) {
         list = remember {
             mutableStateListOf(
                 Item(url = "https://supermercado.eroski.es/images/22445217.jpg"),
@@ -79,7 +79,6 @@ fun ListImageController() {
             Text(text = "Add First Item")
         }
     }
-
 
 
 }

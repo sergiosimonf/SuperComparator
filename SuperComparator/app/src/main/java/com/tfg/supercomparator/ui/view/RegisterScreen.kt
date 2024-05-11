@@ -6,15 +6,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -77,7 +78,8 @@ fun RegisterScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 25.dp),
+                        .padding(horizontal = 25.dp)
+                        .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     RegisterSection(viewModel)
@@ -113,27 +115,26 @@ private fun RegisterSectionBotom(navController: NavHostController, viewModel: Re
                                 fontSize = 14.sp,
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Medium,
-//                                textDecoration = TextDecoration.Underline,
                             )
                         ) {
                             append("¿Quieres añadir un método\npara recuperar la contraseña?")
                         }
                     },
                     onClick = {
-                        viewModel.changePasswordRecoverMode(passwordRecoverMode)
+                        viewModel.changePasswordRecoverMode()
                     },
                 )
                 Checkbox(
                     checked = passwordRecoverMode,
-                    onCheckedChange = { viewModel.changePasswordRecoverMode(passwordRecoverMode) },
+                    onCheckedChange = { viewModel.changePasswordRecoverMode() },
                     colors = CheckboxDefaults.colors(uiColor)
                 )
             }
         }
         Row(
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(),
+                .padding(top = 50.dp)
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -168,6 +169,7 @@ private fun RegisterSectionBotom(navController: NavHostController, viewModel: Re
             })
         }
     }
+    Spacer(modifier = Modifier.height(50.dp))
 }
 
 @Composable
@@ -218,7 +220,7 @@ private fun RegisterSection(viewModel: RegisterViewModel) {
         label = "Password",
         value = password,
         onValueChange = { viewModel.onRegisterChanged(email, it, repeatPassword) },
-        onIconButtonClick = { viewModel.changePasswordMode(passwordMode) },
+        onIconButtonClick = { viewModel.changePasswordMode() },
         passwordTextField = true,
         textPassWordMode = passwordMode,
         modifier = Modifier.fillMaxWidth()
@@ -228,7 +230,7 @@ private fun RegisterSection(viewModel: RegisterViewModel) {
         label = "Repeat password",
         value = repeatPassword,
         onValueChange = { viewModel.onRegisterChanged(email, password, it) },
-        onIconButtonClick = { viewModel.changePasswordMode(passwordMode) },
+        onIconButtonClick = { viewModel.changePasswordMode() },
         passwordTextField = true,
         textPassWordMode = passwordMode,
         modifier = Modifier.fillMaxWidth()

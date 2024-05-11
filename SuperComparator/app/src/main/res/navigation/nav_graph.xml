@@ -5,7 +5,8 @@
     app:startDestination="@id/mainViewSuperComparator">
 
     <fragment android:id="@+id/placeholder" />
-    <navigation android:id="@+id/navigation"
+    <navigation
+        android:id="@+id/navigation"
         app:startDestination="@id/mainViewSuperComparator">
         <activity
             android:id="@+id/mainViewSuperComparator"

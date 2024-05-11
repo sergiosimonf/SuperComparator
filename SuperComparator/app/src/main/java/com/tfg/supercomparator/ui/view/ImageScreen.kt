@@ -19,18 +19,19 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.imageLoader
-import coil.memory.MemoryCache
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ImageScren(
     navController: NavHostController = rememberNavController()
-    ) {
+) {
     val context = LocalContext.current
     val imageUrl = "https://supermercado.eroski.es/images/22445217.jpg"
     Surface {
-        Column(modifier = Modifier
-            .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = null,

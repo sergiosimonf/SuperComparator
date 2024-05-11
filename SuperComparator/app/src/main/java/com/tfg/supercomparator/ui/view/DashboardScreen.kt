@@ -58,10 +58,10 @@ fun DashboardScreen(navController: NavHostController = rememberNavController()) 
             contentAlignment = Alignment.TopCenter
         ) {
             Card(
-                shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
+                shape = RoundedCornerShape(topStart = 50.dp, topEnd = 40.dp),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 55.dp)
+                    .padding(top = 55.dp),
             ) {
                 Box(
                     modifier = Modifier
@@ -103,7 +103,7 @@ fun CustomTopAppBar() {
                     style = TextStyle(
                         fontStyle = FontStyle.Italic,
                         fontFamily = FontFamily(Font((R.font.roboto_bold))),
-                        fontSize = 22.sp
+                        fontSize = 26.sp
                     )
                 )
                 IconButton(
@@ -129,7 +129,7 @@ fun CustomBottomBar(selectedIndex: MutableState<Int>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 22.dp)
             .height(64.dp)
             .clip(RoundedCornerShape(25.dp))
             .background(uiColor),

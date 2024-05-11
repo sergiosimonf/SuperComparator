@@ -22,10 +22,10 @@ class Actions(navController: NavHostController) {
 }
 
 sealed class AppScreens(val ruta: String) {
-    data object LOGIN: AppScreens(ruta = "login")
-    data object REGISTER: AppScreens("register")
-    data object DASHBOARD: AppScreens("dashboard")
-    data object IMAGE: AppScreens("image")
-    data object MOVABLE: AppScreens("movable")
-    data object SPLASHSCREEN: AppScreens("splashscreen")
+    data object LOGIN : AppScreens(ruta = "login")
+    data object REGISTER : AppScreens("register")
+    data object DASHBOARD : AppScreens("dashboard")
+    data object IMAGE : AppScreens("image")
+    data object MOVABLE : AppScreens("movable")
+    data object SPLASHSCREEN : AppScreens("splashscreen")
 }

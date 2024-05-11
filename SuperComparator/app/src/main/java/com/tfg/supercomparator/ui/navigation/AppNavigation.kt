@@ -7,9 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import com.tfg.supercomparator.ui.view.DashboardScreen
 import com.tfg.supercomparator.ui.view.ImageScren
 import com.tfg.supercomparator.ui.view.LoginScreen
+import com.tfg.supercomparator.ui.view.RegisterScreen
 import com.tfg.supercomparator.ui.view.SplashScreen
 import com.tfg.supercomparator.ui.view.test.MovableContentScreen
-import com.tfg.supercomparator.ui.view.RegisterScreen
 
 @Composable
 fun AppNavigation() {

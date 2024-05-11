@@ -10,27 +10,27 @@ data class DiaProduct(
     val pricePerUnitText: String,
     val imageUrl: String,
     val productUrl: String,
-    val hadOferta: Boolean = price.compareTo(priceSinOferta) != 0
-) {
-    fun DiaProduct.mapToProduct(): Product {
-        return Product(
-            name = this.name,
-            price = this.price,
-            priceOfert = if (this.hadOferta) this.priceSinOferta else null,
-            priceNoOfert = if (!this.hadOferta) this.priceSinOferta else null,
-            ofertExtra = null,
-            pricePerUnit = this.pricePerUnit,
-            pricePerUnitOfert = null,
-            pricePerUnitText = this.pricePerUnitText,
-            pricePerUnitOfertText = null,
-            imageUrl = this.imageUrl,
-            productUrl = this.productUrl,
-            hasOferta = this.hadOferta,
-            hasOfertaExtra = false
-        )
-    }
+    val hasOferta: Boolean = price.compareTo(priceSinOferta) != 0
+)
 
-    fun List<DiaProduct>.mapToProductList(): List<Product> {
-        return this.map { it.mapToProduct() }
-    }
+fun DiaProduct.mapToProduct(): Product {
+    return Product(
+        name = this.name,
+        price = this.price,
+        priceOfert = this.price,
+        priceNoOfert = this.priceSinOferta,
+        ofertExtra = null,
+        pricePerUnit = this.pricePerUnit,
+        pricePerUnitOfert = null,
+        pricePerUnitText = this.pricePerUnitText,
+        pricePerUnitOfertText = null,
+        imageUrl = this.imageUrl,
+        productUrl = this.productUrl,
+        hasOferta = this.hasOferta,
+        hasOfertaExtra = false
+    )
+}
+
+fun List<DiaProduct>.mapToProductList(): List<Product> {
+    return this.map { it.mapToProduct() }
 }

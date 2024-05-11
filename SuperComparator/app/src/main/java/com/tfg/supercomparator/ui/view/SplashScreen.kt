@@ -44,7 +44,7 @@ private fun Splash() {
             contentDescription = "SuperComparator",
             Modifier.size(100.dp, 150.dp),
 
-        )
+            )
         Text(text = "SuperComparator", fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }

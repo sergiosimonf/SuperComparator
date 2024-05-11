@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.jsoup)
     implementation(libs.live.data)
     implementation(libs.coil)
     implementation(libs.dagger.hilt)
