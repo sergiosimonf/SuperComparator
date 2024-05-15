@@ -6,6 +6,7 @@ import com.tfg.supercomparator.domain.hipercor.HipercorProduct;
 import com.tfg.supercomparator.domain.hipercor.HipercorProductHistory;
 import com.tfg.supercomparator.domain.hipercor.HipercorProductHistoryItem;
 import com.tfg.supercomparator.infrastructure.repository.mongo.hipercor.HipercorMongoRepository;
+import com.tfg.supercomparator.infrastructure.scraper.hipercor.HipercorScraper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,16 @@ import java.util.List;
 @Service
 public class HipercorServiceImpl extends ProductService<HipercorProductHistoryItem, HipercorProductHistory, HipercorProductHistoryRepository> implements HipercorService {
 
-    public HipercorServiceImpl(@Qualifier("hipercorMongoRepository") HipercorProductHistoryRepository repository) {
+    private final HipercorScraper hipercorScraper;
+
+    public HipercorServiceImpl(@Qualifier("hipercorMongoRepository") HipercorProductHistoryRepository repository, HipercorScraper hipercorScraper) {
         super(repository);
+        this.hipercorScraper = hipercorScraper;
     }
 
     @Override
     public List<HipercorProduct> findProduct(String product) {
-        return null;
+        return hipercorScraper.searchProduct(product);
     }
 
     @Override
