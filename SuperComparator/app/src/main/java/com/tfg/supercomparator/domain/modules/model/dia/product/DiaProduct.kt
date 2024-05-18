@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.dia.product
 
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class DiaProduct(
@@ -10,7 +11,8 @@ data class DiaProduct(
     val pricePerUnitText: String,
     val imageUrl: String,
     val productUrl: String,
-    val hasOferta: Boolean = price.compareTo(priceSinOferta) != 0
+    val hasOferta: Boolean = price.compareTo(priceSinOferta) != 0,
+    val tiendaIcon: Int = R.drawable.dia
 )
 
 fun DiaProduct.mapToProduct(): Product {
@@ -27,7 +29,8 @@ fun DiaProduct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = this.productUrl,
         hasOferta = this.hasOferta,
-        hasOfertaExtra = false
+        hasOfertaExtra = false,
+        tiendaIcon = tiendaIcon
     )
 }
 

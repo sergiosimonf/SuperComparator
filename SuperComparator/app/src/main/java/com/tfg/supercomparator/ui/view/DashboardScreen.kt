@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.TopAppBar
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +25,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,25 +39,43 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.tfg.supercomparator.R
+import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
+import com.tfg.supercomparator.domain.modules.auth.AuthManager
+import com.tfg.supercomparator.ui.navigation.AppScreens
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.blackGray
+import com.tfg.supercomparator.viewModel.DashboardViewModel
 
-@Preview
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DashboardScreen(navController: NavHostController = rememberNavController()) {
+fun DashboardScreen(
+    viewModel: DashboardViewModel = DashboardViewModel(),
+    navController: NavHostController,
+    analytics: AnalyticsManager,
+    auth: AuthManager,
+) {
+    analytics.LogScreenView(screenName = AppScreens.DASHBOARD.ruta)
     val selectedIndex = remember { mutableIntStateOf(0) }
+    val showDialog by viewModel.showDialog.observeAsState(initial = false)
+
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
 
+    val onLogoutConfirmed: () -> Unit = {
+        auth.signOut()
+        navController.navigate(AppScreens.LOGIN.ruta) {
+            popUpTo(AppScreens.DASHBOARD.ruta) {
+                inclusive = true
+            }
+        }
+    }
+
     Surface(color = uiColor) {
-        CustomTopAppBar()
+        CustomTopAppBar(viewModel)
         Box(
             contentAlignment = Alignment.TopCenter
         ) {
@@ -79,8 +101,19 @@ fun DashboardScreen(navController: NavHostController = rememberNavController()) 
                         }
 
                         3 -> {
+                            UserScreen(
+                                analytics = analytics,
+                                auth = auth,
+                                navigation = navController
+                            )
                         }
                     }
+                }
+                if (showDialog) {
+                    LogoutDialog(onConfirmLogout = {
+                        onLogoutConfirmed()
+                        viewModel.hiadeDialog()
+                    }, onDismiss = { viewModel.hiadeDialog() })
                 }
                 CustomBottomBar(selectedIndex = selectedIndex)
             }
@@ -89,8 +122,9 @@ fun DashboardScreen(navController: NavHostController = rememberNavController()) 
 }
 
 @Composable
-fun CustomTopAppBar() {
+fun CustomTopAppBar(viewModel: DashboardViewModel) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
     TopAppBar(
         elevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
@@ -108,12 +142,13 @@ fun CustomTopAppBar() {
                 )
                 IconButton(
                     modifier = Modifier.align(Alignment.CenterEnd),
-                    onClick = { }
+                    onClick = { viewModel.showDialog() }
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.settings),
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout),
                         contentDescription = "settings",
-                        modifier = Modifier.size(32.dp)
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
                     )
                 }
             }
@@ -200,4 +235,27 @@ fun TabIcons(icon: Painter, isTintColor: Boolean) {
             contentDescription = "tb_icon_else"
         )
     }
+}
+
+@Composable
+fun LogoutDialog(onConfirmLogout: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Cerrar sesión") },
+        text = { Text("¿Estás seguro que deseas cerrar sesión?") },
+        confirmButton = {
+            Button(
+                onClick = onConfirmLogout
+            ) {
+                Text("Aceptar")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismiss
+            ) {
+                Text("Cancelar")
+            }
+        }
+    )
 }

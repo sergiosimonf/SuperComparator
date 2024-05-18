@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.hipercor
 
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class HipercorProduct(
@@ -10,7 +11,8 @@ data class HipercorProduct(
     val precioSinOferta: Double?,
     val imageUrl: String,
     val productUrl: String,
-    val haveOferta: Boolean = precioSinOferta != null
+    val haveOferta: Boolean = precioSinOferta != null,
+    val tiendaIcon: Int = R.drawable.hipercor
 )
 
 fun HipercorProduct.mapToProduct(): Product {
@@ -27,7 +29,8 @@ fun HipercorProduct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = this.productUrl,
         hasOferta = this.haveOferta,
-        hasOfertaExtra = false
+        hasOfertaExtra = false,
+        tiendaIcon = this.tiendaIcon
     )
 }
 

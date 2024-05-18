@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.carrefour.product
 
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class CarrefourProduct(
@@ -14,7 +15,8 @@ data class CarrefourProduct(
     val productUrl: String,
     val ofertaExtra: String?,
     val hasOferta: Boolean = priceSinOfeta != null,
-    val hasOfertaExtra: Boolean = ofertaExtra != null
+    val hasOfertaExtra: Boolean = ofertaExtra != null,
+    val tiendaIcon: Int = R.drawable.carrefour
 )
 
 fun CarrefourProduct.mapToProduct(): Product {
@@ -31,7 +33,8 @@ fun CarrefourProduct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = this.productUrl,
         hasOferta = this.hasOferta,
-        hasOfertaExtra = this.hasOfertaExtra
+        hasOfertaExtra = this.hasOfertaExtra,
+        tiendaIcon = tiendaIcon
     )
 }
 

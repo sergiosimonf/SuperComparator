@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.alcampo.product
 
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class AlcampoProduct(
@@ -8,6 +9,7 @@ data class AlcampoProduct(
     val pricePerUnit: Double,
     val pricePerUnitText: String,
     val imageUrl: String,
+    val tiendaIcon: Int = R.drawable.alcampo
 )
 
 fun AlcampoProduct.mapToProduct(): Product {
@@ -24,7 +26,8 @@ fun AlcampoProduct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = null,
         hasOferta = false,
-        hasOfertaExtra = false
+        hasOfertaExtra = false,
+        tiendaIcon = this.tiendaIcon
     )
 }
 

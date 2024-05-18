@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.mercadona
 
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class MercadonaProduct(
@@ -10,7 +11,8 @@ data class MercadonaProduct(
     val priceDiscount: Double?,
     val priceNoDiscount: Double?,
     val imageUrl: String,
-    val isDiscount: Boolean = priceDiscount != null
+    val isDiscount: Boolean = priceDiscount != null,
+    val tiendaIcon: Int = R.drawable.mercadona
 )
 
 private fun MercadonaProduct.mapToProduct(): Product {
@@ -27,7 +29,8 @@ private fun MercadonaProduct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = null,
         hasOferta = this.isDiscount,
-        hasOfertaExtra = false
+        hasOfertaExtra = false,
+        tiendaIcon = this.tiendaIcon
     )
 }
 

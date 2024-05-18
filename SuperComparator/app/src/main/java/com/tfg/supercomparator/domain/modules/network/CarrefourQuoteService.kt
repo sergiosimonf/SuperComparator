@@ -1,7 +1,6 @@
 package com.tfg.supercomparator.domain.modules.network
 
 import com.tfg.supercomparator.domain.modules.model.carrefour.gson.Carrefour
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -6,12 +6,13 @@ data class Product(
     val priceOfert: Double?,
     val priceNoOfert: Double?,
     val ofertExtra: String?,
-    val pricePerUnit: Double,
+    val pricePerUnit: Double?,
     val pricePerUnitOfert: Double?,
     val pricePerUnitText: String,
     val pricePerUnitOfertText: String?,
     val imageUrl: String,
     val productUrl: String?,
     val hasOferta: Boolean,
-    val hasOfertaExtra: Boolean
+    val hasOfertaExtra: Boolean,
+    val tiendaIcon: Int
 )

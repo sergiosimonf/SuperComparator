@@ -1,11 +1,7 @@
 package com.tfg.supercomparator.service
 
-import com.tfg.supercomparator.domain.modules.model.carrefour.gson.Carrefour
 import com.tfg.supercomparator.domain.modules.model.carrefour.product.CarrefourProduct
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class CarrefourSercice : SearchProduct<CarrefourProduct> {
     override suspend fun findProducts(query: String): List<CarrefourProduct> {

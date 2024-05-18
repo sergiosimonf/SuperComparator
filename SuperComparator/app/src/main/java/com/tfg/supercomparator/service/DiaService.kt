@@ -3,7 +3,6 @@ package com.tfg.supercomparator.service
 import android.util.Log
 import com.tfg.supercomparator.domain.modules.model.dia.product.DiaProduct
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
-import org.jsoup.Jsoup
 
 class DiaService : SearchProduct<DiaProduct> {
     override suspend fun findProducts(query: String): List<DiaProduct> {

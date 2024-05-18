@@ -1,13 +1,10 @@
 package com.tfg.supercomparator.service
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.tfg.supercomparator.domain.modules.model.ahorramas.AhorramasProudct
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
 
-import java.io.*
-
-class AhorramasServices: SearchProduct<AhorramasProudct> {
+class AhorramasServices : SearchProduct<AhorramasProudct> {
 
     override suspend fun findProducts(query: String): List<AhorramasProudct> {
         val call = QuoteRepository.getAhorramasProduct(query)
@@ -23,15 +20,20 @@ class AhorramasServices: SearchProduct<AhorramasProudct> {
             val pricePerQuantityNoFormated = element.select(".unit-price-per-unit").text()
             val imageUrl = element.select(".tile-image").attr("src")
 
-            val (pricePerQuantityText, pricePerQuantityOfertaText) = pricePerQuantityFormatText(pricePerQuantityNoFormated)
+            val (pricePerQuantityText, pricePerQuantityOfertaText) = pricePerQuantityFormatText(
+                pricePerQuantityNoFormated
+            )
 
-            val (pricePerQuantity, pricePerQuantityOferta) = pricePerQuantityFormatDouble(pricePerQuantityText, pricePerQuantityOfertaText)
+            val (pricePerQuantity, pricePerQuantityOferta) = pricePerQuantityFormatDouble(
+                pricePerQuantityText,
+                pricePerQuantityOfertaText
+            )
 
             val ahorramasProduct = createAhorramasProduct(
                 name,
                 price,
                 priceNoOferta,
-                pricePerQuantity,
+                pricePerQuantity?: 0.0,
                 pricePerQuantityText,
                 pricePerQuantityOferta,
                 pricePerQuantityOfertaText,
@@ -104,8 +106,9 @@ class AhorramasServices: SearchProduct<AhorramasProudct> {
     private fun pricePerQuantityFormatDouble(
         pricePerQuantityText: String,
         pricePerQuantityOfertaText: String
-    ): Pair<Double, Double?> {
-        val pricePerQuantity = pricePerQuantityText.replace(",", ".").split("€")[0].toDouble()
+    ): Pair<Double?, Double?> {
+        Log.d("Error", "$pricePerQuantityText ,$pricePerQuantityOfertaText ")
+        val pricePerQuantity = pricePerQuantityText.replace(",", ".").split("€")[0].toDoubleOrNull()
         val pricePerQuantityOferta =
             pricePerQuantityOfertaText.replace(",", ".").split("€")[0].toDoubleOrNull()
         return Pair(pricePerQuantity, pricePerQuantityOferta)

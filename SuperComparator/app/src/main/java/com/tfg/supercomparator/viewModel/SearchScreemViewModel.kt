@@ -25,19 +25,19 @@ import kotlinx.coroutines.withContext
 
 class SearchScreemViewModel : ViewModel() {
 
-    private val _ahorramasIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _ahorramasIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val ahorramasIconSearch: LiveData<Boolean> = _ahorramasIconSearch
 
-    private val _alcampoIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _alcampoIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val alcampoIconSearch: LiveData<Boolean> = _alcampoIconSearch
 
-    private val _carrefourIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _carrefourIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val carrefourIconSearch: LiveData<Boolean> = _carrefourIconSearch
 
-    private val _diaIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _diaIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val diaIconSearch: LiveData<Boolean> = _diaIconSearch
 
-    private val _eroskiIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _eroskiIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val eroskiIconSearch: LiveData<Boolean> = _eroskiIconSearch
 
     private val _hipercorIconSearch = MutableLiveData<Boolean>().apply { value = false }
@@ -85,6 +85,7 @@ class SearchScreemViewModel : ViewModel() {
 
         viewModelScope.launch {
             totalQueries.awaitAll() // Espera a que todas las consultas terminen
+            products.sortBy { it.price }
             _searchProuducts.postValue(products)
             Log.d("Search", "Todas las consultas han finalizado")
         }

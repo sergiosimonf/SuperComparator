@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.ahorramas
 
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class AhorramasProudct(
@@ -11,7 +12,8 @@ data class AhorramasProudct(
     val pricePerQuantityOferta: Double?,
     val pricePerQuantityOfertaText: String?,
     val imageUrl: String,
-    val tieneOferta: Boolean = priceOfert != null
+    val tieneOferta: Boolean = priceOfert != null,
+    val tiendaIcon: Int = R.drawable.ahorramas
 )
 
 fun AhorramasProudct.mapToProduct(): Product {
@@ -28,7 +30,8 @@ fun AhorramasProudct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = null,
         hasOferta = this.tieneOferta,
-        hasOfertaExtra = false
+        hasOfertaExtra = false,
+        tiendaIcon = this.tiendaIcon
     )
 }
 

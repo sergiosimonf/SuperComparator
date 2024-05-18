@@ -1,5 +1,6 @@
 package com.tfg.supercomparator.ui.view
 
+import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,9 +29,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -41,12 +44,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tfg.supercomparator.R
+import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
+import com.tfg.supercomparator.domain.modules.auth.AuthManager
 import com.tfg.supercomparator.ui.navigation.AppScreens
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.GrayBanished
@@ -54,14 +58,20 @@ import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.Roboto
 import com.tfg.supercomparator.ui.view.components.RegisterTextField
 import com.tfg.supercomparator.viewModel.RegisterViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-@Preview
 @Composable
 fun RegisterScreen(
-    navController: NavHostController = rememberNavController(),
-    viewModel: RegisterViewModel = RegisterViewModel(navController)
+    analytics: AnalyticsManager,
+    navController: NavHostController,
+    viewModel: RegisterViewModel = RegisterViewModel(navController),
+    auth: AuthManager
 ) {
+    analytics.LogScreenView(screenName = AppScreens.REGISTER.ruta)
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Surface(color = uiColor) {
         Box(
@@ -82,7 +92,7 @@ fun RegisterScreen(
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    RegisterSection(viewModel)
+                    RegisterSection(viewModel, auth, analytics, scope, navController, context)
                     Spacer(modifier = Modifier.height(10.dp))
                     RegisterSectionBotom(navController, viewModel)
                 }
@@ -173,7 +183,14 @@ private fun RegisterSectionBotom(navController: NavHostController, viewModel: Re
 }
 
 @Composable
-private fun RegisterSection(viewModel: RegisterViewModel) {
+private fun RegisterSection(
+    viewModel: RegisterViewModel,
+    auth: AuthManager,
+    analytics: AnalyticsManager,
+    scope: CoroutineScope,
+    navController: NavHostController,
+    context: Context
+) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
 
     val email by viewModel.email.observeAsState(initial = "")
@@ -237,9 +254,14 @@ private fun RegisterSection(viewModel: RegisterViewModel) {
     )
     Spacer(modifier = Modifier.height(20.dp))
     Button(
-        modifier = Modifier.fillMaxWidth(), onClick = {}, colors = ButtonDefaults.buttonColors(
-            containerColor = uiColor, contentColor = Color.White
-        ), shape = RoundedCornerShape(size = 4.dp)
+        onClick = {
+            scope.launch {
+                viewModel.signUp(auth, analytics, navController, context)
+            }
+        },
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(containerColor = uiColor, contentColor = Color.White),
+        shape = RoundedCornerShape(size = 4.dp)
     ) {
         Text(
             text = "Register now",

@@ -2,6 +2,7 @@ package com.tfg.supercomparator.ui.view.components
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -123,11 +124,11 @@ fun ProductContentSearch(viewModel: SearchScreemViewModel = SearchScreemViewMode
     }
 }
 
+//Product("", 0.0, 0.0, 0.0, "0.0", 0.0, 0.0, "a", "", "", "true", true, true )
 @Composable
+//@Preview
 private fun ProductCard(item: Product) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
-    Log.d(TAG, "${item.hasOfertaExtra}")
-    Log.d(TAG, "${item.ofertExtra}")
     Card(
         onClick = {},
         modifier = Modifier
@@ -176,6 +177,16 @@ private fun ProductCard(item: Product) {
                             }
                         }
                     }
+                }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Image(
+                        painter = painterResource(id = item.tiendaIcon),
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp)
+                    )
                 }
             }
             Text(

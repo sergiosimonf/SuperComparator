@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.IconButton
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,11 +56,11 @@ fun SearchScreen(
 @Composable
 fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
 
-    val ahorramasIconSearch: Boolean by viewModel.ahorramasIconSearch.observeAsState(initial = false)
-    val alcampoIconSearch: Boolean by viewModel.alcampoIconSearch.observeAsState(initial = false)
-    val carrefourIconSearch: Boolean by viewModel.carrefourIconSearch.observeAsState(initial = false)
-    val diaIconSearch: Boolean by viewModel.diaIconSearch.observeAsState(initial = false)
-    val eroskiIconSearch: Boolean by viewModel.eroskiIconSearch.observeAsState(initial = false)
+    val ahorramasIconSearch: Boolean by viewModel.ahorramasIconSearch.observeAsState(initial = true)
+    val alcampoIconSearch: Boolean by viewModel.alcampoIconSearch.observeAsState(initial = true)
+    val carrefourIconSearch: Boolean by viewModel.carrefourIconSearch.observeAsState(initial = true)
+    val diaIconSearch: Boolean by viewModel.diaIconSearch.observeAsState(initial = true)
+    val eroskiIconSearch: Boolean by viewModel.eroskiIconSearch.observeAsState(initial = true)
     val hipercorIconSearch: Boolean by viewModel.hipercorIconSearch.observeAsState(initial = false)
     val mercadonaSearch: Boolean by viewModel.mercadonaSearch.observeAsState(initial = false)
 

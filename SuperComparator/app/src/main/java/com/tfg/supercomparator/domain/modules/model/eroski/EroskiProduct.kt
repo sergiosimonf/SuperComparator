@@ -1,6 +1,6 @@
 package com.tfg.supercomparator.domain.modules.model.eroski
 
-import com.tfg.supercomparator.domain.modules.model.dia.product.mapToProduct
+import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.model.product.Product
 
 data class EroskiProduct(
@@ -11,7 +11,8 @@ data class EroskiProduct(
     val pricePerQuantityText: String,
     val hasOferta: Boolean = priceWithoutOfert != null,
     val productUrl: String?,
-    val imageUrl: String
+    val imageUrl: String,
+    val tiendaIcon: Int = R.drawable.eroski
 )
 
 fun EroskiProduct.mapToProduct(): Product {
@@ -28,7 +29,8 @@ fun EroskiProduct.mapToProduct(): Product {
         imageUrl = this.imageUrl,
         productUrl = this.productUrl,
         hasOferta = this.hasOferta,
-        hasOfertaExtra = false
+        hasOfertaExtra = false,
+        tiendaIcon = this.tiendaIcon
     )
 }
 

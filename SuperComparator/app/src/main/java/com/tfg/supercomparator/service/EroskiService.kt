@@ -18,7 +18,8 @@ class EroskiService : SearchProduct<EroskiProduct> {
                 EroskiProduct(
                     name = product.select(".product-title-resp a").text(),
                     price = product.select(".price-offer-now").text().replace(",", ".").toDouble(),
-                    priceWithoutOfert = product.select("span.price-offer-before").text().replace(",", ".").toDoubleOrNull(),
+                    priceWithoutOfert = product.select("span.price-offer-before").text()
+                        .replace(",", ".").toDoubleOrNull(),
                     imageUrl = product.select(".product-img").attr("src"),
                     productUrl = "https://supermercado.eroski.es$productUrl",
                     pricePerQuantity = quantityPrice.replace(",", ".").replace("€", "").toDouble(),
