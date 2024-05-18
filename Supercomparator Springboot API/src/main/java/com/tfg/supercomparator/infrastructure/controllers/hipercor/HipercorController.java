@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("api/hipercor")
+@RequestMapping("api/hipercor/")
 @AllArgsConstructor
 public class HipercorController {
 

@@ -22,7 +22,7 @@ class EroskiService : SearchProduct<EroskiProduct> {
                         .replace(",", ".").toDoubleOrNull(),
                     imageUrl = product.select(".product-img").attr("src"),
                     productUrl = "https://supermercado.eroski.es$productUrl",
-                    pricePerQuantity = quantityPrice.replace(",", ".").replace("€", "").toDouble(),
+                    pricePerQuantity = quantityPrice.replace(",", ".").replace("€", "").toDoubleOrNull()?: 0.0,
                     pricePerQuantityText = "$quantityPrice/$priceQuantityText",
                 )
             )

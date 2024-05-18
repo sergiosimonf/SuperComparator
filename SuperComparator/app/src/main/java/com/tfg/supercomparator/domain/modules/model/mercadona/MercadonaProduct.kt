@@ -30,7 +30,7 @@ private fun MercadonaProduct.mapToProduct(): Product {
         productUrl = null,
         hasOferta = this.isDiscount,
         hasOfertaExtra = false,
-        tiendaIcon = this.tiendaIcon
+        tiendaIcon = R.drawable.mercadona
     )
 }
 

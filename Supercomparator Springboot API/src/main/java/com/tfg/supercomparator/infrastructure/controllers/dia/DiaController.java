@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("api/dia")
+@RequestMapping("api/dia/")
 @AllArgsConstructor
 public class DiaController {
 

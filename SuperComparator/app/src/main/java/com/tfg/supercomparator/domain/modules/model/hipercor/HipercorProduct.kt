@@ -30,7 +30,7 @@ fun HipercorProduct.mapToProduct(): Product {
         productUrl = this.productUrl,
         hasOferta = this.haveOferta,
         hasOfertaExtra = false,
-        tiendaIcon = this.tiendaIcon
+        tiendaIcon = R.drawable.hipercor
     )
 }
 

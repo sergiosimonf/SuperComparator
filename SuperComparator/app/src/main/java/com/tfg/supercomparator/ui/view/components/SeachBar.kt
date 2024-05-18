@@ -119,12 +119,14 @@ fun SearchBarSuperProducts(viewModel: SearchScreemViewModel) {
         query = query,
         onQueryChange = { viewModel.onQueryChanged(it) },
         onSearch = { newQuery ->
-            viewModel.unSeachBarActiveMode()
-            viewModel.executeQuery()
-            scope.launch {
-                withContext(Dispatchers.IO) {
-                    Thread.sleep(100) // Pequeño delay para que no apareca en la animación
-                    searchHistory.add(newQuery)
+            if (newQuery.isNotEmpty()) {
+                viewModel.unSeachBarActiveMode()
+                viewModel.executeQuery()
+                scope.launch {
+                    withContext(Dispatchers.IO) {
+                        Thread.sleep(100) // Pequeño delay para que no apareca en la animación
+                        searchHistory.add(newQuery)
+                    }
                 }
             }
         },

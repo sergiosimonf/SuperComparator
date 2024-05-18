@@ -143,8 +143,7 @@ fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
             }
             IconButton(
                 modifier = Modifier.padding(end = padding),
-                onClick = { }
-//                onClick = { viewModel.onTouchHipercorIconSearch() }
+                onClick = { viewModel.onTouchHipercorIconSearch() }
             ) {
                 Image(
                     painter = painterResource(id = hipercorIcon),
@@ -153,8 +152,7 @@ fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
                         .height(imageSize)
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
-//            onClick = { viewModel.onTouchMercadonaIconSearch() }
+            IconButton(onClick = { viewModel.onTouchMercadonaIconSearch() }) {
                 Image(
                     painter = painterResource(id = mercadonaIcon),
                     contentDescription = null,

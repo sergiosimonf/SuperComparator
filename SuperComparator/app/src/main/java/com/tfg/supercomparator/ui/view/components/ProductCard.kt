@@ -124,9 +124,7 @@ fun ProductContentSearch(viewModel: SearchScreemViewModel = SearchScreemViewMode
     }
 }
 
-//Product("", 0.0, 0.0, 0.0, "0.0", 0.0, 0.0, "a", "", "", "true", true, true )
 @Composable
-//@Preview
 private fun ProductCard(item: Product) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
     Card(
@@ -244,7 +242,7 @@ private fun OfferBadge(priceNoOfert: Double?, priceOfert: Double?) {
             Log.e(TAG, "Wtf ")
         }
         Text(
-            text = "  ${calcularPorcentajeDeOferta(priceNoOfert!!, priceOfert!!)}% dto  ",
+            text = "${calcularPorcentajeDeOferta(priceNoOfert!!, priceOfert!!)}% dto",
             color = Color.White,
             style = MaterialTheme.typography.bodySmall,
             fontSize = 9.sp

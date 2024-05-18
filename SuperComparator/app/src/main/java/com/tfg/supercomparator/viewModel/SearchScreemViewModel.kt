@@ -10,12 +10,16 @@ import com.tfg.supercomparator.domain.modules.model.alcampo.product.mapToProduct
 import com.tfg.supercomparator.domain.modules.model.carrefour.product.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.dia.product.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.eroski.mapToProductList
+import com.tfg.supercomparator.domain.modules.model.hipercor.mapToProductList
+import com.tfg.supercomparator.domain.modules.model.mercadona.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.product.Product
 import com.tfg.supercomparator.service.AhorramasServices
 import com.tfg.supercomparator.service.AlcampoService
 import com.tfg.supercomparator.service.CarrefourSercice
 import com.tfg.supercomparator.service.DiaService
 import com.tfg.supercomparator.service.EroskiService
+import com.tfg.supercomparator.service.HipercorService
+import com.tfg.supercomparator.service.MercadonaService
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -40,10 +44,10 @@ class SearchScreemViewModel : ViewModel() {
     private val _eroskiIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val eroskiIconSearch: LiveData<Boolean> = _eroskiIconSearch
 
-    private val _hipercorIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _hipercorIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val hipercorIconSearch: LiveData<Boolean> = _hipercorIconSearch
 
-    private val _mercadornaIconSearch = MutableLiveData<Boolean>().apply { value = false }
+    private val _mercadornaIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val mercadonaSearch: LiveData<Boolean> = _mercadornaIconSearch
 
     private val _seachBarActiveMode = MutableLiveData<Boolean>().apply { value = false }
@@ -75,13 +79,13 @@ class SearchScreemViewModel : ViewModel() {
             query.value?.let { searchDia(it) }?.let { totalQueries.add(it) }
 
         if (eroskiIconSearch.value == true)
-            query.value?.let { searcheroski(it) }?.let { totalQueries.add(it) }
+            query.value?.let { searchEroski(it) }?.let { totalQueries.add(it) }
 
         if (hipercorIconSearch.value == true)
-            Log.d("Search", "${hipercorIconSearch.value}")
+            query.value?.let { searchHipercor(it) }?.let { totalQueries.add(it) }
 
         if (mercadonaSearch.value == true)
-            Log.d("Search", "${mercadonaSearch.value}")
+            query.value?.let { searchMercadona(it) }?.let { totalQueries.add(it) }
 
         viewModelScope.launch {
             totalQueries.awaitAll() // Espera a que todas las consultas terminen
@@ -131,7 +135,7 @@ class SearchScreemViewModel : ViewModel() {
     }
 
 
-    private fun searcheroski(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchEroski(query: String): Deferred<Unit> = viewModelScope.async {
         val quote =
             withContext(Dispatchers.IO) {
                 EroskiService().findProducts(query)
@@ -140,6 +144,24 @@ class SearchScreemViewModel : ViewModel() {
         Log.e("Response", quote.toString())
     }
 
+
+    private fun searchHipercor(query: String): Deferred<Unit> = viewModelScope.async {
+        val quote =
+            withContext(Dispatchers.IO) {
+                HipercorService().findProducts(query)
+            }
+        products.addAll(quote.mapToProductList())
+        Log.e("Response", quote.toString())
+    }
+
+    private fun searchMercadona(query: String): Deferred<Unit> = viewModelScope.async {
+        val quote =
+            withContext(Dispatchers.IO) {
+                MercadonaService().findProducts(query)
+            }
+        products.addAll(quote.mapToProductList())
+        Log.e("Response", quote.toString())
+    }
 
     fun onQueryChanged(query: String) {
         _query.value = query

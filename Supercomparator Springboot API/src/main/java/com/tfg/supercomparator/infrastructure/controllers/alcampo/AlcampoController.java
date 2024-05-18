@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("api/alcampo")
+@RequestMapping("api/alcampo/")
 @AllArgsConstructor
 public class AlcampoController {
 
