@@ -9,5 +9,5 @@ data class Facet(
     @SerializedName("facet_id")
     val facetId: String,
     @SerializedName("values")
-    val values: List<Value>
+    val values: List<Value>,
 )

@@ -47,7 +47,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
 import com.tfg.supercomparator.domain.modules.auth.AuthManager
@@ -66,7 +65,7 @@ fun RegisterScreen(
     analytics: AnalyticsManager,
     navController: NavHostController,
     viewModel: RegisterViewModel = RegisterViewModel(navController),
-    auth: AuthManager
+    auth: AuthManager,
 ) {
     analytics.LogScreenView(screenName = AppScreens.REGISTER.ruta)
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
@@ -189,7 +188,7 @@ private fun RegisterSection(
     analytics: AnalyticsManager,
     scope: CoroutineScope,
     navController: NavHostController,
-    context: Context
+    context: Context,
 ) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
 

@@ -5,4 +5,5 @@
     <string name="register">Registrer now</string>
     <string name="login">Login in</string>
     <string name="default_web_client_id">100619342381-gmpelcmqebeti7av71nfo79q2rdj59ut.apps.googleusercontent.com</string>
+    <string name="add_task">New Task</string>
 </resources>

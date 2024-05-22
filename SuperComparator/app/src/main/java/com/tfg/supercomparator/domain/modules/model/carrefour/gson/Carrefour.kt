@@ -15,5 +15,5 @@ data class Carrefour(
     @SerializedName("promoted")
     val promoted: List<Any>,
     @SerializedName("seo")
-    val seo: Seo
+    val seo: Seo,
 )

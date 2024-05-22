@@ -33,7 +33,7 @@ class AhorramasServices : SearchProduct<AhorramasProudct> {
                 name,
                 price,
                 priceNoOferta,
-                pricePerQuantity?: 0.0,
+                pricePerQuantity ?: 0.0,
                 pricePerQuantityText,
                 pricePerQuantityOferta,
                 pricePerQuantityOfertaText,
@@ -54,7 +54,7 @@ class AhorramasServices : SearchProduct<AhorramasProudct> {
         pricePerQuantityText: String,
         pricePerQuantityOferta: Double?,
         pricePerQuantityOfertaText: String,
-        imageUrl: String
+        imageUrl: String,
     ): AhorramasProudct? {
         if (price != null) {
             val producto = if (priceNoOferta != null && price != priceNoOferta) {
@@ -105,7 +105,7 @@ class AhorramasServices : SearchProduct<AhorramasProudct> {
 
     private fun pricePerQuantityFormatDouble(
         pricePerQuantityText: String,
-        pricePerQuantityOfertaText: String
+        pricePerQuantityOfertaText: String,
     ): Pair<Double?, Double?> {
         Log.d("Error", "$pricePerQuantityText ,$pricePerQuantityOfertaText ")
         val pricePerQuantity = pricePerQuantityText.replace(",", ".").split("€")[0].toDoubleOrNull()

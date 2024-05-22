@@ -26,7 +26,7 @@ fun LoginTextField(
     onValueChange: (String) -> Unit,
     passwordMode: Boolean,
     label: String,
-    trailing: String
+    trailing: String,
 ) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Black
 

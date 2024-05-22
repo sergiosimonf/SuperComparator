@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseUser
 import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
 import com.tfg.supercomparator.domain.modules.auth.AuthManager
+import com.tfg.supercomparator.domain.modules.data.DatabaseProvider
 import com.tfg.supercomparator.ui.view.DashboardScreen
 import com.tfg.supercomparator.ui.view.ForgotPasswordScreen
 import com.tfg.supercomparator.ui.view.ImageScren
@@ -19,14 +19,13 @@ import com.tfg.supercomparator.ui.view.test.MovableContentScreen
 
 @Composable
 fun AppNavigation(context: Context, navController: NavHostController = rememberNavController()) {
-    var analytics: AnalyticsManager = AnalyticsManager(context)
+    val database = DatabaseProvider.getAppDatabase(context)
+    val analytics: AnalyticsManager = AnalyticsManager(context)
     val authManager: AuthManager = AuthManager(context)
-
-    val user: FirebaseUser? = authManager.getCurrentUser()
 
     NavHost(
         navController = navController,
-        startDestination = if (user == null) AppScreens.SPLASHSCREEN.ruta else AppScreens.DASHBOARD.ruta
+        startDestination = AppScreens.SPLASHSCREEN.ruta
     ) {
         composable(AppScreens.LOGIN.ruta) {
             LoginScreen(
@@ -43,13 +42,17 @@ fun AppNavigation(context: Context, navController: NavHostController = rememberN
             )
         }
         composable(AppScreens.SPLASHSCREEN.ruta) {
-            SplashScreen(navController)
+            SplashScreen(
+                authManager = authManager,
+                navController = navController
+            )
         }
         composable(AppScreens.DASHBOARD.ruta) {
             DashboardScreen(
                 auth = authManager,
                 analytics = analytics,
-                navController = navController
+                navController = navController,
+                database = database
 
             )
         }

@@ -7,5 +7,5 @@ data class Seo(
     @SerializedName("keywords")
     val keywords: Any,
     @SerializedName("snippet")
-    val snippet: String
+    val snippet: String,
 )

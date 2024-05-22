@@ -12,7 +12,7 @@ data class MercadonaProduct(
     val priceNoDiscount: Double?,
     val imageUrl: String,
     val isDiscount: Boolean = priceDiscount != null,
-    val tiendaIcon: Int = R.drawable.mercadona
+    val tiendaIcon: Int = R.drawable.mercadona,
 )
 
 private fun MercadonaProduct.mapToProduct(): Product {

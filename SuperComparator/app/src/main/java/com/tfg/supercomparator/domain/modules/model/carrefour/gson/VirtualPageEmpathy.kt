@@ -19,5 +19,5 @@ data class VirtualPageEmpathy(
     @SerializedName("searchNumResults")
     val searchNumResults: String,
     @SerializedName("searchParamsQuery")
-    val searchParamsQuery: String
+    val searchParamsQuery: String,
 )

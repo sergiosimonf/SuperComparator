@@ -18,40 +18,40 @@ data class Alcampo(
     val images: List<Image>,
     val icons: Icons,
     val size: Size,
-    val featured: String
+    val featured: String,
 )
 
 data class Price(
     val current: Amount,
-    val unit: Unit
+    val unit: Unit,
 )
 
 data class Amount(
     val amount: String,
-    val currency: String
+    val currency: String,
 )
 
 data class Unit(
     val label: String,
-    val current: Amount
+    val current: Amount,
 )
 
 data class RatingSummary(
     val overallRating: String,
-    val count: Int
+    val count: Int,
 )
 
 data class Image(
     val src: String,
-    val description: String
+    val description: String,
 )
 
 data class Icons(
     val certification: List<Any>, // Puedes reemplazar Any con el tipo de objeto adecuado si lo conoces
-    val legal: List<Any> // Puedes reemplazar Any con el tipo de objeto adecuado si lo conoces
+    val legal: List<Any>, // Puedes reemplazar Any con el tipo de objeto adecuado si lo conoces
 )
 
 data class Size(
-    val value: String
+    val value: String,
 )
 

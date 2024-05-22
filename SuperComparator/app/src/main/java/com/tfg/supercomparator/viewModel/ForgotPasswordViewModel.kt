@@ -12,7 +12,7 @@ import com.tfg.supercomparator.domain.modules.auth.AuthRes
 import com.tfg.supercomparator.ui.navigation.AppScreens
 
 
-class ForgotPasswordViewModel: ViewModel() {
+class ForgotPasswordViewModel : ViewModel() {
 
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
@@ -20,15 +20,16 @@ class ForgotPasswordViewModel: ViewModel() {
         analytics: AnalyticsManager,
         auth: AuthManager,
         context: Context,
-        navController: NavController
+        navController: NavController,
     ) {
-        if (!email.value.isNullOrEmpty()){
-            when(val res = auth.resetPassword(email.value!!)) {
+        if (!email.value.isNullOrEmpty()) {
+            when (val res = auth.resetPassword(email.value!!)) {
                 is AuthRes.Success -> {
                     analytics.logButtonClicked(buttonName = "Reset password $email")
                     Toast.makeText(context, "Correo enviado", Toast.LENGTH_SHORT).show()
                     navController.navigate(AppScreens.LOGIN.ruta)
                 }
+
                 is AuthRes.Error -> {
                     analytics.logError(error = "Reset password error $email : ${res.errorMessage}")
                     Toast.makeText(context, "Error al enviar el correo", Toast.LENGTH_SHORT).show()

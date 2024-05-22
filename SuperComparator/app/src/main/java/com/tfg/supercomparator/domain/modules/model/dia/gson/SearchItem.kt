@@ -12,5 +12,5 @@ data class SearchItem(
     val sku_id: String,
     val units_in_cart: Int,
     val units_in_stock: Int,
-    val url: String
+    val url: String,
 )

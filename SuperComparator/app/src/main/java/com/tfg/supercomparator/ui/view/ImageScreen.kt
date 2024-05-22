@@ -23,7 +23,7 @@ import coil.imageLoader
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ImageScren(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     val context = LocalContext.current
     val imageUrl = "https://supermercado.eroski.es/images/22445217.jpg"

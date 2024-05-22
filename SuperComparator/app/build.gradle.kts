@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.gms.googleServices)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -52,9 +53,14 @@ android {
 }
 
 dependencies {
+    implementation(libs.swiperefresh)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+//    ksp(libs.room.compiler)
+    kapt(libs.room.compiler)
+//    implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.analytics)
-    implementation(libs.androidx.room.ktx)
     implementation(libs.jsoup)
     implementation(libs.live.data)
     implementation(libs.coil)

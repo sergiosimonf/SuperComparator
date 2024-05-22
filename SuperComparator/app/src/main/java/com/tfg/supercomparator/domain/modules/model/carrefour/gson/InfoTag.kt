@@ -7,5 +7,5 @@ data class InfoTag(
     @SerializedName("color_code")
     val colorCode: String,
     @SerializedName("message")
-    val message: String
+    val message: String,
 )

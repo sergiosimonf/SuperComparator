@@ -12,7 +12,7 @@ data class DiaProduct(
     val imageUrl: String,
     val productUrl: String,
     val hasOferta: Boolean = price.compareTo(priceSinOferta) != 0,
-    val tiendaIcon: Int = R.drawable.dia
+    val tiendaIcon: Int = R.drawable.dia,
 )
 
 fun DiaProduct.mapToProduct(): Product {

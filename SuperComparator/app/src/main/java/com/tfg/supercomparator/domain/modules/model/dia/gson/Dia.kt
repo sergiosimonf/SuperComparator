@@ -10,5 +10,5 @@ data class Dia(
     val search_items: List<SearchItem>,
     val sort: Sort,
     val suggestions: Suggestions,
-    val total_items: Int
+    val total_items: Int,
 )

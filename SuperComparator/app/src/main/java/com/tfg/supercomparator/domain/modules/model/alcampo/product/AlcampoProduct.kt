@@ -9,7 +9,7 @@ data class AlcampoProduct(
     val pricePerUnit: Double,
     val pricePerUnitText: String,
     val imageUrl: String,
-    val tiendaIcon: Int = R.drawable.alcampo
+    val tiendaIcon: Int = R.drawable.alcampo,
 )
 
 fun AlcampoProduct.mapToProduct(): Product {

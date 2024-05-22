@@ -7,5 +7,5 @@ data class EbTagging(
     @SerializedName("add2cart")
     val add2cart: String,
     @SerializedName("click")
-    val click: String
+    val click: String,
 )

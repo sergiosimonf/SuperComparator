@@ -16,7 +16,7 @@ data class CarrefourProduct(
     val ofertaExtra: String?,
     val hasOferta: Boolean = priceSinOfeta != null,
     val hasOfertaExtra: Boolean = ofertaExtra != null,
-    val tiendaIcon: Int = R.drawable.carrefour
+    val tiendaIcon: Int = R.drawable.carrefour,
 )
 
 fun CarrefourProduct.mapToProduct(): Product {

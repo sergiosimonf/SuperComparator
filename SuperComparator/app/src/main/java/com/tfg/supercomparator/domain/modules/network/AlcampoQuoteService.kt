@@ -7,6 +7,6 @@ import retrofit2.http.Query
 interface AlcampoQuoteService {
     @GET("products/search?sort=price")
     suspend fun getAlcampoProduct(
-        @Query("term") term: String
+        @Query("term") term: String,
     ): ResponseBody
 }

@@ -76,7 +76,7 @@ fun LoginScreen(
     navController: NavHostController = rememberNavController(),
     viewModel: LoginViewModel = LoginViewModel(),
     analytics: AnalyticsManager,
-    auth: AuthManager
+    auth: AuthManager,
 ) {
     analytics.LogScreenView(screenName = AppScreens.LOGIN.ruta)
     val context = LocalContext.current
@@ -84,26 +84,30 @@ fun LoginScreen(
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
 
     val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { result ->
-        when(val account = auth.handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(result.data))) {
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        when (val account =
+            auth.handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(result.data))) {
             is AuthRes.Success -> {
                 val credential = GoogleAuthProvider.getCredential(account?.data?.idToken, null)
                 scope.launch {
                     val fireUser = auth.signInWithGoogleCredential(credential)
-                    if (fireUser != null){
+                    if (fireUser != null) {
                         Toast.makeText(context, "Bienvenidx", Toast.LENGTH_SHORT).show()
-                        navController.navigate(AppScreens.DASHBOARD.ruta){
-                            popUpTo(AppScreens.LOGIN.ruta){
+                        navController.navigate(AppScreens.DASHBOARD.ruta) {
+                            popUpTo(AppScreens.LOGIN.ruta) {
                                 inclusive = true
                             }
                         }
                     }
                 }
             }
+
             is AuthRes.Error -> {
                 analytics.logError("Error SignIn: ${account.errorMessage}")
                 Toast.makeText(context, "Error: ${account.errorMessage}", Toast.LENGTH_SHORT).show()
             }
+
             else -> {
                 Toast.makeText(context, "Error desconocido", Toast.LENGTH_SHORT).show()
             }
@@ -199,7 +203,7 @@ private fun SocialMediaSection(
     scope: CoroutineScope,
     context: Context,
     navController: NavHostController,
-    googleSignInLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
+    googleSignInLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
 ) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -207,21 +211,6 @@ private fun SocialMediaSection(
             text = "Or continue with",
             style = MaterialTheme.typography.labelMedium.copy(color = uiColor)
         )
-//        Spacer(modifier = Modifier.height(20.dp))
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            SocialMediaLognInIcon(
-//                icon = R.drawable.incognito,
-//                text = "No Account",
-//                modifier = Modifier.fillMaxSize()
-//            ) {
-//                scope.launch {
-//                    viewModel.signInAnonymously(auth, analytics, context, navController)
-//                }
-//            }
-//        }
         Spacer(modifier = Modifier.height(20.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -254,7 +243,7 @@ private fun LoginSection(
     analytics: AnalyticsManager,
     scope: CoroutineScope,
     context: Context,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password by viewModel.password.observeAsState(initial = "")

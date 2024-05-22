@@ -54,7 +54,7 @@ fun ForgotPasswordScreen(
     auth: AuthManager,
     analytics: AnalyticsManager,
     viewModel: ForgotPasswordViewModel = ForgotPasswordViewModel(),
-    navController: NavController
+    navController: NavController,
 ) {
     analytics.LogScreenView(screenName = AppScreens.FORGOTPASSWORD.ruta)
 
@@ -81,7 +81,15 @@ fun ForgotPasswordScreen(
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    ForgotPasswordSection(navController, uiColor, viewModel, auth, analytics, scope, context)
+                    ForgotPasswordSection(
+                        navController,
+                        uiColor,
+                        viewModel,
+                        auth,
+                        analytics,
+                        scope,
+                        context
+                    )
                 }
             }
         }
@@ -96,10 +104,10 @@ private fun ForgotPasswordSection(
     auth: AuthManager,
     analytics: AnalyticsManager,
     scope: CoroutineScope,
-    context: Context
+    context: Context,
 ) {
     val email by viewModel.email.observeAsState(initial = "")
-    
+
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Forgot password",

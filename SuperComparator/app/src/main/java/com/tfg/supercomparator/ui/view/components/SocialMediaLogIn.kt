@@ -32,7 +32,7 @@ fun SocialMediaLognIn(
     modifier: Modifier = Modifier,
     @DrawableRes icon: Int,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier

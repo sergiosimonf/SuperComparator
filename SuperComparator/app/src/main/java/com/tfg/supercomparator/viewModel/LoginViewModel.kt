@@ -21,8 +21,10 @@ import kotlinx.coroutines.withContext
 class LoginViewModel : ViewModel() {
     private val _email = MutableLiveData<String>().apply { value = "" }
     val email: LiveData<String> = _email
+
     private val _password = MutableLiveData<String>().apply { value = "" }
     val password: LiveData<String> = _password
+
     private val _passwordMode = MutableLiveData<Boolean>().apply { value = true }
     val passwordMode: LiveData<Boolean> = _passwordMode
 
@@ -50,7 +52,7 @@ class LoginViewModel : ViewModel() {
         auth: AuthManager,
         analytics: AnalyticsManager,
         context: Context,
-        navController: NavHostController
+        navController: NavHostController,
     ) {
         when (val result = auth.signInAnonymously()) {
             is AuthRes.Success -> {
@@ -72,7 +74,7 @@ class LoginViewModel : ViewModel() {
         auth: AuthManager,
         analytics: AnalyticsManager,
         context: Context,
-        navController: NavHostController
+        navController: NavHostController,
     ) {
         val email = _email.value
         val password = _password.value

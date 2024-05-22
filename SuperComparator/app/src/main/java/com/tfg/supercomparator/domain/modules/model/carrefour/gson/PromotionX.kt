@@ -7,5 +7,5 @@ data class PromotionX(
     @SerializedName("id")
     val id: String,
     @SerializedName("url")
-    val url: String
+    val url: String,
 )

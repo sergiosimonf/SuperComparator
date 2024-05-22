@@ -32,7 +32,7 @@ fun RegisterTextField(
     onIconButtonClick: (Boolean) -> Unit,
     passwordTextField: Boolean,
     textPassWordMode: Boolean,
-    label: String
+    label: String,
 ) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Black
 

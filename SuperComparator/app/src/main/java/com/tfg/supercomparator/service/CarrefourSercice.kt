@@ -17,7 +17,7 @@ class CarrefourSercice : SearchProduct<CarrefourProduct> {
                         name = product.displayName,
                         price = product.activePrice,
                         pricePorUnidad = product.pricePerUnitText.replace(",", ".")
-                            .split("€")[0].toDouble(),
+                            .split("€")[0].toDoubleOrNull()?: 0.0,
                         pricePorUnidadText = product.pricePerUnitText,
                         pricePorUnidadOfertaText = null,
                         pricePorUnidadOferta = null,
@@ -31,7 +31,7 @@ class CarrefourSercice : SearchProduct<CarrefourProduct> {
                         name = product.displayName,
                         price = product.strikethroughPrice,
                         pricePorUnidad = product.pricePerUnitText.replace(",", ".")
-                            .split("€")[0].toDouble(),
+                            .split("€")[0].toDoubleOrNull()?: 0.0,
                         pricePorUnidadText = product.pricePerUnitText,
                         pricePorUnidadOfertaText = product.appStrikethroughPricePerUnit,
                         pricePorUnidadOferta = product.appStrikethroughPricePerUnit.replace(

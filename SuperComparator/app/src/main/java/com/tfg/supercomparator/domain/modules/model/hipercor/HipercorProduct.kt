@@ -12,7 +12,7 @@ data class HipercorProduct(
     val imageUrl: String,
     val productUrl: String,
     val haveOferta: Boolean = precioSinOferta != null,
-    val tiendaIcon: Int = R.drawable.hipercor
+    val tiendaIcon: Int = R.drawable.hipercor,
 )
 
 fun HipercorProduct.mapToProduct(): Product {

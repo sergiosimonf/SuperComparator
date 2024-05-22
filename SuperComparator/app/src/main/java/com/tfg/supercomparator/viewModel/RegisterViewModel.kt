@@ -46,7 +46,7 @@ class RegisterViewModel(private val navController: NavHostController) : ViewMode
         auth: AuthManager,
         analytics: AnalyticsManager,
         navController: NavHostController,
-        context: Context
+        context: Context,
     ) {
         val email = _email.value
         val password = _password.value

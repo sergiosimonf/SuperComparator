@@ -3,11 +3,6 @@ package com.tfg.supercomparator.domain.modules.auth
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -16,11 +11,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.tfg.supercomparator.R
+import kotlinx.coroutines.tasks.await
 
 sealed class AuthRes<out T> {
-    data class Success<T>(val data: T): AuthRes<T>()
-    data class Error(val errorMessage: String): AuthRes<Nothing>()
+    data class Success<T>(val data: T) : AuthRes<T>()
+    data class Error(val errorMessage: String) : AuthRes<Nothing>()
 }
 
 class AuthManager(context: Context) {
@@ -32,25 +32,31 @@ class AuthManager(context: Context) {
         return try {
             val result = auth.signInAnonymously().await()
             AuthRes.Success(result.user ?: throw Exception("Error al iniciar sesión"))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             AuthRes.Error(e.message ?: "Error al iniciar sesión")
         }
     }
 
-    suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthRes<FirebaseUser?> {
+    suspend fun createUserWithEmailAndPassword(
+        email: String,
+        password: String,
+    ): AuthRes<FirebaseUser?> {
         return try {
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
             AuthRes.Success(authResult.user)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             AuthRes.Error(e.message ?: "Error al crear el usuario")
         }
     }
 
-    suspend fun signInWithEmailAndPassword(email: String, password: String): AuthRes<FirebaseUser?> {
+    suspend fun signInWithEmailAndPassword(
+        email: String,
+        password: String,
+    ): AuthRes<FirebaseUser?> {
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             AuthRes.Success(authResult.user)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             AuthRes.Error(e.message ?: "Error al iniciar sesión")
         }
     }
@@ -59,7 +65,7 @@ class AuthManager(context: Context) {
         return try {
             auth.sendPasswordResetEmail(email).await()
             AuthRes.Success(Unit)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             AuthRes.Error(e.message ?: "Error al restablecer la contraseña")
         }
     }
@@ -97,7 +103,7 @@ class AuthManager(context: Context) {
         googleSignInLauncher.launch(signInIntent)
     }
 
-    fun getCurrentUser(): FirebaseUser?{
+    fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
 

@@ -1,7 +1,6 @@
 package com.tfg.supercomparator.ui.view
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -45,6 +44,7 @@ import androidx.navigation.NavHostController
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
 import com.tfg.supercomparator.domain.modules.auth.AuthManager
+import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.ui.navigation.AppScreens
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
@@ -58,6 +58,7 @@ fun DashboardScreen(
     navController: NavHostController,
     analytics: AnalyticsManager,
     auth: AuthManager,
+    database: AppDatabase,
 ) {
     analytics.LogScreenView(screenName = AppScreens.DASHBOARD.ruta)
     val selectedIndex = remember { mutableIntStateOf(0) }
@@ -91,13 +92,14 @@ fun DashboardScreen(
                 ) {
                     when (selectedIndex.value) {
                         0 -> {
-                            SearchScreen()
+                            SearchScreen(database)
                         }
 
                         1 -> {
                         }
 
                         2 -> {
+                            FavoriteScreen(database)
                         }
 
                         3 -> {

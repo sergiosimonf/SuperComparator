@@ -28,6 +28,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,95 +42,24 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.tfg.supercomparator.R
+import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.domain.modules.model.product.Product
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.viewModel.SearchScreemViewModel
-
-@Preview
-@Composable
-fun ProductContentSearch(viewModel: SearchScreemViewModel = SearchScreemViewModel()) {
-
-    val searchItems: MutableList<Product>? by viewModel.searchProuducts.observeAsState()
-    val history: String by viewModel.query.observeAsState(initial = "")
-
-    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
-
-    Card(
-        colors = CardDefaults.cardColors(uiColor),
-        shape = RoundedCornerShape(35.dp, 35.dp, 0.dp, 0.dp)
-    ) {
-        Text(
-            text = "Productos",
-            color = Color.White,
-            style = TextStyle(
-                fontFamily = FontFamily(Font((R.font.roboto_bold))),
-                fontSize = 25.sp,
-                textAlign = TextAlign.Center,
-            ),
-            modifier = Modifier
-                .padding(top = 12.dp)
-                .fillMaxWidth()
-        )
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
-        if (searchItems == null) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 20.dp),
-                text = "No products found yet do a search to start comparing...",
-                textAlign = TextAlign.Center,
-                fontSize = 22.sp,
-                color = Color.White
-            )
-        } else {
-            if (searchItems!!.isEmpty()) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp, bottom = 20.dp),
-                        text = "No products found yet",
-                        textAlign = TextAlign.Center,
-                        fontSize = 22.sp,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    CircularProgressIndicator(color = Color.White)
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    items(searchItems!!) { item ->
-                        Column(
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            ProductCard(item)
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-}
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-private fun ProductCard(item: Product) {
-    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+fun ProductCard(item: Product, database: AppDatabase) {
+    val scope = rememberCoroutineScope()
+    val isFavorite by remember { mutableStateOf(item.isFavorite) }
+
     Card(
         onClick = {},
         modifier = Modifier
@@ -158,7 +91,13 @@ private fun ProductCard(item: Product) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     FavoriteButton(
-                        onCheckedChange = { /*TODO*/ }
+                        onCheckedChange = {
+                            item.isFavorite = it
+                            scope.launch(Dispatchers.IO) {
+                                database.productDAO.upsertProduct(item)
+                            }
+                        },
+                        isFavorite = isFavorite
                     )
                     if (item.hasOfertaExtra) {
                         Card(
@@ -191,7 +130,6 @@ private fun ProductCard(item: Product) {
                 text = item.name,
                 color = Color.Gray,
                 style = MaterialTheme.typography.labelLarge,
-//                fontFamily = R.font.roboto_bold,
                 modifier = Modifier.padding(top = 8.dp)
             )
             Spacer(modifier = Modifier.size(4.dp))

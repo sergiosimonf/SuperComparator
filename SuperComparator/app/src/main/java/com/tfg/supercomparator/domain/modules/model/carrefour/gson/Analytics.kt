@@ -7,5 +7,5 @@ data class Analytics(
     @SerializedName("impressions")
     val impressions: String,
     @SerializedName("virtualPage-Empathy")
-    val virtualPageEmpathy: VirtualPageEmpathy
+    val virtualPageEmpathy: VirtualPageEmpathy,
 )

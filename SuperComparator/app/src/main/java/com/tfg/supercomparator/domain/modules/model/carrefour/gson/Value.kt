@@ -9,5 +9,5 @@ data class Value(
     @SerializedName("filter")
     val filter: String,
     @SerializedName("value")
-    val value: String
+    val value: String,
 )

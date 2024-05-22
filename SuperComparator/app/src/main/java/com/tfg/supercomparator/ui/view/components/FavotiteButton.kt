@@ -18,9 +18,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 fun FavoriteButton(
     modifier: Modifier = Modifier,
     color: Color = Color(0xFFD50000),
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    isFavorite: Boolean
 ) {
-    var isFavorite by remember { mutableStateOf(false) }
+    var isFavorite by remember { mutableStateOf(isFavorite) }
 
     IconToggleButton(
         checked = isFavorite,

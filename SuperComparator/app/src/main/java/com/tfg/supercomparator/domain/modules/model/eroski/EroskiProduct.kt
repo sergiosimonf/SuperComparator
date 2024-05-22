@@ -12,7 +12,7 @@ data class EroskiProduct(
     val hasOferta: Boolean = priceWithoutOfert != null,
     val productUrl: String?,
     val imageUrl: String,
-    val tiendaIcon: Int = R.drawable.eroski
+    val tiendaIcon: Int = R.drawable.eroski,
 )
 
 fun EroskiProduct.mapToProduct(): Product {

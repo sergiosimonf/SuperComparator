@@ -22,7 +22,6 @@ public class MercadonaController {
     private MercadonaSaveProductHistoryUseCase saveProductHistory;
     private FindMercadonaProductUseCase mercadonaProductUseCase;
 
-
     @PostMapping("")
     public ResponseEntity<MercadonaProductHistoryItem> saveProductHistoryDiaController(
             @RequestBody() MercadonaProductHistoryItem product

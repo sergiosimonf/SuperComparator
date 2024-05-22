@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class BadgeMap(
     @SerializedName("promotions")
-    val promotions: List<Promotion>
+    val promotions: List<Promotion>,
 )

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.domain.modules.model.ahorramas.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.alcampo.product.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.carrefour.product.mapToProductList
@@ -13,6 +14,7 @@ import com.tfg.supercomparator.domain.modules.model.eroski.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.hipercor.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.mercadona.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.product.Product
+import com.tfg.supercomparator.domain.modules.network.QuoteRepository
 import com.tfg.supercomparator.service.AhorramasServices
 import com.tfg.supercomparator.service.AlcampoService
 import com.tfg.supercomparator.service.CarrefourSercice
@@ -29,6 +31,26 @@ import kotlinx.coroutines.withContext
 
 class SearchScreemViewModel : ViewModel() {
 
+    private val _filters = MutableLiveData<Boolean>().apply { value = false }
+    val filters: LiveData<Boolean> = _filters
+
+    private val _expanded = MutableLiveData<Boolean>().apply { value = false }
+    val expanded: LiveData<Boolean> = _expanded
+
+    private val _suggestions =
+        MutableLiveData<List<String>>().apply { value = listOf("Price", "Price per unit") }
+    val suggestions: LiveData<List<String>> = _suggestions
+
+    private val _selectedSortType = MutableLiveData<String>().apply { value = "Price" }
+    val selectedSortType: LiveData<String> = _selectedSortType
+
+    private val _textfieldSize =
+        MutableLiveData<androidx.compose.ui.geometry.Size>().apply { androidx.compose.ui.geometry.Size.Zero }
+    val textfieldSize: LiveData<androidx.compose.ui.geometry.Size> = _textfieldSize
+
+    private val _productSelected = MutableLiveData<Product>()
+    val productSelected: LiveData<Product> = _productSelected
+
     private val _ahorramasIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val ahorramasIconSearch: LiveData<Boolean> = _ahorramasIconSearch
 
@@ -44,10 +66,12 @@ class SearchScreemViewModel : ViewModel() {
     private val _eroskiIconSearch = MutableLiveData<Boolean>().apply { value = true }
     val eroskiIconSearch: LiveData<Boolean> = _eroskiIconSearch
 
-    private val _hipercorIconSearch = MutableLiveData<Boolean>().apply { value = true }
+    private val _hipercorIconSearch =
+        MutableLiveData<Boolean>().apply { value = QuoteRepository.apiConexion }
     val hipercorIconSearch: LiveData<Boolean> = _hipercorIconSearch
 
-    private val _mercadornaIconSearch = MutableLiveData<Boolean>().apply { value = true }
+    private val _mercadornaIconSearch =
+        MutableLiveData<Boolean>().apply { value = QuoteRepository.apiConexion }
     val mercadonaSearch: LiveData<Boolean> = _mercadornaIconSearch
 
     private val _seachBarActiveMode = MutableLiveData<Boolean>().apply { value = false }
@@ -61,9 +85,12 @@ class SearchScreemViewModel : ViewModel() {
 
     private var products = mutableListOf<Product>()
 
-    fun executeQuery() {
+    fun executeQuery(database: AppDatabase) {
         _searchProuducts.postValue(mutableListOf())
         products = mutableListOf()
+
+        _filters.value = true
+
         val totalQueries = mutableListOf<Deferred<Unit>>()
 
         if (ahorramasIconSearch.value == true)
@@ -87,15 +114,44 @@ class SearchScreemViewModel : ViewModel() {
         if (mercadonaSearch.value == true)
             query.value?.let { searchMercadona(it) }?.let { totalQueries.add(it) }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             totalQueries.awaitAll() // Espera a que todas las consultas terminen
-            products.sortBy { it.price }
+            sortProducts()
+            checkFavoriteProuducts(database)
             _searchProuducts.postValue(products)
             Log.d("Search", "Todas las consultas han finalizado")
         }
     }
 
-    private fun searchAhorramas(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun checkFavoriteProuducts(database: AppDatabase) {
+        val productsDatabase = database.productDAO.getFavProducts()
+        val productsNameDatabase = productsDatabase.associateBy { it.name }
+
+        products.forEach { product ->
+            product.isFavorite = productsNameDatabase[product.name]?.isFavorite ?: false
+        }
+    }
+
+    private fun sortProducts() {
+        Log.d("SELECTED SORT TYPE", _selectedSortType.value!!)
+        when (_selectedSortType.value) {
+            "Price" -> {
+                Log.d("SORTING BY", _selectedSortType.value!!)
+                products.sortBy { it.price }
+            }
+
+            "Price per unit" -> {
+                Log.d("SORTING BY", _selectedSortType.value!!)
+                products.sortBy { it.pricePerUnit }
+            }
+        }
+    }
+
+    private fun checkFavoriteProducts() {
+
+    }
+
+    private fun searchAhorramas(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) { AhorramasServices().findProducts(query) }
         Log.e("Response", quote.toString())
@@ -103,7 +159,7 @@ class SearchScreemViewModel : ViewModel() {
         Log.e("Response", _searchProuducts.value?.size.toString())
     }
 
-    private fun searchAlcampo(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchAlcampo(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) {
                 AlcampoService().findProducts(query)
@@ -114,7 +170,7 @@ class SearchScreemViewModel : ViewModel() {
     }
 
 
-    private fun searchCarrefour(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchCarrefour(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) {
                 CarrefourSercice().findProducts(query)
@@ -125,7 +181,7 @@ class SearchScreemViewModel : ViewModel() {
     }
 
 
-    private fun searchDia(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchDia(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) {
                 DiaService().findProducts(query)
@@ -135,7 +191,7 @@ class SearchScreemViewModel : ViewModel() {
     }
 
 
-    private fun searchEroski(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchEroski(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) {
                 EroskiService().findProducts(query)
@@ -145,7 +201,7 @@ class SearchScreemViewModel : ViewModel() {
     }
 
 
-    private fun searchHipercor(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchHipercor(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) {
                 HipercorService().findProducts(query)
@@ -154,7 +210,7 @@ class SearchScreemViewModel : ViewModel() {
         Log.e("Response", quote.toString())
     }
 
-    private fun searchMercadona(query: String): Deferred<Unit> = viewModelScope.async {
+    private fun searchMercadona(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) {
                 MercadonaService().findProducts(query)
@@ -200,10 +256,30 @@ class SearchScreemViewModel : ViewModel() {
     }
 
     fun onTouchHipercorIconSearch() {
-        _hipercorIconSearch.value = _hipercorIconSearch.value?.not()
+        if (QuoteRepository.apiConexion) {
+            _hipercorIconSearch.value = _hipercorIconSearch.value?.not()
+        }
     }
 
     fun onTouchMercadonaIconSearch() {
-        _mercadornaIconSearch.value = _mercadornaIconSearch.value?.not()
+        if (QuoteRepository.apiConexion) {
+            _mercadornaIconSearch.value = _mercadornaIconSearch.value?.not()
+        }
+    }
+
+    fun onExpandedEvent() {
+        _expanded.value = _expanded.value?.not()
+    }
+
+    fun dropExpanded() {
+        _expanded.value = false
+    }
+
+    fun changeTextfieldSize(size: androidx.compose.ui.geometry.Size) {
+        _textfieldSize.value = size
+    }
+
+    fun selectText(sortType: String) {
+        _selectedSortType.value = sortType
     }
 }

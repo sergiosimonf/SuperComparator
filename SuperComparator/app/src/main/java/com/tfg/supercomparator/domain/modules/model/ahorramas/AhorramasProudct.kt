@@ -13,7 +13,7 @@ data class AhorramasProudct(
     val pricePerQuantityOfertaText: String?,
     val imageUrl: String,
     val tieneOferta: Boolean = priceOfert != null,
-    val tiendaIcon: Int = R.drawable.ahorramas
+    val tiendaIcon: Int = R.drawable.ahorramas,
 )
 
 fun AhorramasProudct.mapToProduct(): Product {

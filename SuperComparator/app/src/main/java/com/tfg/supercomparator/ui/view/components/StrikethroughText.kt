@@ -23,7 +23,7 @@ fun StrikethroughText(
     text: String,
     fontSize: TextUnit = 16.sp,
     colorLine: Color = Color.Red,
-    textColor: Color = Color.Black
+    textColor: Color = Color.Black,
 ) {
 
     val textStyle = TextStyle(fontSize = fontSize)

@@ -3,6 +3,8 @@ package com.tfg.supercomparator.ui.view
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,43 +14,62 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.tfg.supercomparator.R
+import com.tfg.supercomparator.domain.modules.data.AppDatabase
+import com.tfg.supercomparator.ui.theme.DarkGreen
+import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.view.components.ProductContentSearch
 import com.tfg.supercomparator.ui.view.components.SearchBarSuperProducts
 import com.tfg.supercomparator.viewModel.SearchScreemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview
 @Composable
 fun SearchScreen(
-    viewModel: SearchScreemViewModel = SearchScreemViewModel()
+    database: AppDatabase,
+    viewModel: SearchScreemViewModel = SearchScreemViewModel(),
 ) {
+    val queryExecuted: Boolean by viewModel.filters.observeAsState(initial = false)
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
-        SearchBarSuperProducts(viewModel)
+        SearchBarSuperProducts(viewModel, database)
         Spacer(modifier = Modifier.height(25.dp))
-        SupercMarketsIcons(viewModel)
+        if (!queryExecuted) {
+            SupercMarketsIcons(viewModel)
+        }
         Spacer(modifier = Modifier.height(25.dp))
         Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxHeight()) {
-            ProductContentSearch(viewModel)
+            ProductContentSearch(viewModel, database)
         }
     }
 }
@@ -61,8 +82,8 @@ fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
     val carrefourIconSearch: Boolean by viewModel.carrefourIconSearch.observeAsState(initial = true)
     val diaIconSearch: Boolean by viewModel.diaIconSearch.observeAsState(initial = true)
     val eroskiIconSearch: Boolean by viewModel.eroskiIconSearch.observeAsState(initial = true)
-    val hipercorIconSearch: Boolean by viewModel.hipercorIconSearch.observeAsState(initial = false)
-    val mercadonaSearch: Boolean by viewModel.mercadonaSearch.observeAsState(initial = false)
+    val hipercorIconSearch: Boolean by viewModel.hipercorIconSearch.observeAsState(initial = true)
+    val mercadonaSearch: Boolean by viewModel.mercadonaSearch.observeAsState(initial = true)
 
     val ahorraMasIcon =
         if (ahorramasIconSearch) R.drawable.ahorramas else R.drawable.ahorramas_unactive
@@ -159,6 +180,64 @@ fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
                     modifier = Modifier
                         .height(imageSize)
                 )
+            }
+        }
+        Spacer(modifier = Modifier.height(25.dp))
+        DropDownMenu(viewModel)
+    }
+}
+
+
+@Composable
+fun DropDownMenu(viewModel: SearchScreemViewModel) {
+    val expanded: Boolean by viewModel.expanded.observeAsState(initial = false)
+    val suggestions: List<String> by viewModel.suggestions.observeAsState(
+        initial = listOf(
+            "Price",
+            "Price per unit"
+        )
+    )
+    val selectedSortType: String by viewModel.selectedSortType.observeAsState(initial = "Price")
+    val textfieldSize: Size by viewModel.textfieldSize.observeAsState(initial = Size.Zero)
+
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
+
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
+    Column(Modifier.padding(20.dp)) {
+        OutlinedTextField(
+            value = selectedSortType,
+            onValueChange = { /* No-op */ },
+            readOnly = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    viewModel.changeTextfieldSize(coordinates.size.toSize())
+                },
+            label = { Text("Order by:") },
+            trailingIcon = {
+                Icon(icon, contentDescription = "contentDescription",
+                    Modifier.clickable { viewModel.onExpandedEvent() })
+            },
+            colors = OutlinedTextFieldDefaults.colors(uiColor)
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { viewModel.dropExpanded() },
+            modifier = Modifier
+                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
+        ) {
+            suggestions.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    viewModel.selectText(label)
+                    viewModel.dropExpanded()
+                }) {
+                    Text(text = label)
+                }
             }
         }
     }

@@ -5,10 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-//http://localhost:8080/api/mercadona/?query=coca
 interface HipercorQuoteService {
-    @GET("hipercor/")
+    @GET("api/hipercor/")
     suspend fun getHipercorProduct(
-        @Query("query") query: String
+        @Query("query") query: String,
     ): List<HipercorProduct>
 }

@@ -61,5 +61,5 @@ data class Doc(
     @SerializedName("unit_conversion_factor")
     val unitConversionFactor: Double,
     @SerializedName("url")
-    val url: String
+    val url: String,
 )

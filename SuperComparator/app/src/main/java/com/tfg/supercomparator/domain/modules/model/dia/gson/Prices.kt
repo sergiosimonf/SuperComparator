@@ -8,5 +8,5 @@ data class Prices(
     val measure_unit: String,
     val price: Double,
     val price_per_unit: Double,
-    val strikethrough_price: Double
+    val strikethrough_price: Double,
 )

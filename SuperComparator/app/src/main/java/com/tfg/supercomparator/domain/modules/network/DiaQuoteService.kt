@@ -7,6 +7,6 @@ import retrofit2.http.Query
 interface DiaQuoteService {
     @GET("search-back/search/reduced?")
     suspend fun getDiaProduct(
-        @Query("q") q: String
+        @Query("q") q: String,
     ): Dia
 }

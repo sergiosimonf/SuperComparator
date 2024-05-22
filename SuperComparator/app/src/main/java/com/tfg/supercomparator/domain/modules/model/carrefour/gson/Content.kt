@@ -13,5 +13,5 @@ data class Content(
     @SerializedName("facets")
     val facets: List<Facet>,
     @SerializedName("numFound")
-    val numFound: Int
+    val numFound: Int,
 )
