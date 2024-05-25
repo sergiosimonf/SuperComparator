@@ -1,14 +1,16 @@
 package com.tfg.supercomparator.application.service.hipercor;
 
 import com.tfg.supercomparator.domain.hipercor.HipercorProduct;
-import com.tfg.supercomparator.domain.hipercor.HipercorProductHistory;
 import com.tfg.supercomparator.domain.hipercor.HipercorProductHistoryItem;
+import com.tfg.supercomparator.domain.hipercor.HipercorProductHistoryItems;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface HipercorService {
+    List<HipercorProduct> findProduct(String product);
+
     ResponseEntity<HipercorProductHistoryItem> saveProductHistory(HipercorProductHistoryItem hipercorProductHistory);
 
-    List<HipercorProduct> findProduct(String product);
+    ResponseEntity<HipercorProductHistoryItems> saveProductsHistory(HipercorProductHistoryItems hipercorProductsHistory);
 }

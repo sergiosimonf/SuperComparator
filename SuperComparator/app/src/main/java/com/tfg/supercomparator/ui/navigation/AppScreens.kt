@@ -1,32 +1,23 @@
 package com.tfg.supercomparator.ui.navigation
 
-import androidx.navigation.NavHostController
-import com.tfg.supercomparator.ui.navigation.Destination.LOGIN
-import com.tfg.supercomparator.ui.navigation.Destination.REGISTER
-
-object Destination {
-    const val LOGIN = "Login"
-    const val REGISTER = "Register"
-}
-
-// No funciona
-class Actions(navController: NavHostController) {
-
-    val goRegisterScreen: () -> Unit = {
-        navController.navigate(REGISTER)
-    }
-
-    val goLoginScreen: () -> Unit = {
-        navController.navigate(LOGIN)
-    }
-}
+import android.net.Uri
+import com.tfg.supercomparator.domain.modules.model.product.Product
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 
 sealed class AppScreens(val ruta: String) {
     data object LOGIN : AppScreens(ruta = "login")
     data object REGISTER : AppScreens("register")
     data object DASHBOARD : AppScreens("dashboard")
     data object FORGOTPASSWORD : AppScreens("forgotPassword")
+    data object SPLASHSCREEN : AppScreens("splashscreen")
+    data object PRODUCT : AppScreens("product/{${NavArgs.Product.key}}") {
+        fun createRoute(product: Product) = "product/${Uri.encode(Json.encodeToJsonElement(product).toString())}"
+    }
     data object IMAGE : AppScreens("image")
     data object MOVABLE : AppScreens("movable")
-    data object SPLASHSCREEN : AppScreens("splashscreen")
+}
+
+enum class NavArgs(val key: String) {
+    Product("product")
 }

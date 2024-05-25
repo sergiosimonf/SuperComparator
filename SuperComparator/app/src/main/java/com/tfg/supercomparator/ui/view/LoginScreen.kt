@@ -206,6 +206,7 @@ private fun SocialMediaSection(
     googleSignInLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
 ) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = "Or continue with",

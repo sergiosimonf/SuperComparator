@@ -105,49 +105,15 @@ fun RegisterScreen(
 @Composable
 private fun RegisterSectionBotom(navController: NavHostController, viewModel: RegisterViewModel) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
-    val passwordRecoverMode by viewModel.passwordRecoverMode.observeAsState(initial = false)
 
     Column {
         Row(
             modifier = Modifier
-                .height(40.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                ClickableText(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = GrayBanished,
-                                fontSize = 14.sp,
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Medium,
-                            )
-                        ) {
-                            append("¿Quieres añadir un método\npara recuperar la contraseña?")
-                        }
-                    },
-                    onClick = {
-                        viewModel.changePasswordRecoverMode()
-                    },
-                )
-                Checkbox(
-                    checked = passwordRecoverMode,
-                    onCheckedChange = { viewModel.changePasswordRecoverMode() },
-                    colors = CheckboxDefaults.colors(uiColor)
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 50.dp)
+                .padding(top = 20.dp)
                 .fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(text = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
@@ -160,7 +126,6 @@ private fun RegisterSectionBotom(navController: NavHostController, viewModel: Re
                     append("Already have an account?")
                 }
             })
-            Spacer(modifier = Modifier.width(5.dp))
             ClickableText(text = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
@@ -174,11 +139,10 @@ private fun RegisterSectionBotom(navController: NavHostController, viewModel: Re
                     append("Sign in")
                 }
             }, onClick = {
-                navController.navigate(AppScreens.LOGIN.ruta)
+                navController.popBackStack()
             })
         }
     }
-    Spacer(modifier = Modifier.height(50.dp))
 }
 
 @Composable

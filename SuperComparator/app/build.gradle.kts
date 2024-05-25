@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.gms.googleServices)
     alias(libs.plugins.kapt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.parcelize)
+    alias(libs.plugins.serializable)
 }
 
 android {
@@ -53,6 +55,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.serializable)
     implementation(libs.swiperefresh)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -69,6 +72,7 @@ dependencies {
     implementation(libs.retrofitConverterGson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

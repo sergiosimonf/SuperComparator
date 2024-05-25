@@ -14,19 +14,17 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.domain.modules.model.product.Product
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.view.components.ProductCard
 import com.tfg.supercomparator.viewModel.FavoriteViewModel
+import com.tfg.supercomparator.viewModel.ProductViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,7 +33,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun FavoriteScreen(
     database: AppDatabase,
-    viewModel: FavoriteViewModel = FavoriteViewModel(),
+    viewModel: FavoriteViewModel,
+    navController: NavController
 ) {
 //    analytics.LogScreenView(screenName = AppScreens.LOGIN.ruta)
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
@@ -63,7 +62,7 @@ fun FavoriteScreen(
         ) {
             if (!refreshing) {
                 items(favProducts) { item ->
-                    ProductCard(item, database)
+                    ProductCard(item, database, navController)
                 }
             }
         }

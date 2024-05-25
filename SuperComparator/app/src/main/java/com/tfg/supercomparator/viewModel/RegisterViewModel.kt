@@ -25,9 +25,6 @@ class RegisterViewModel(private val navController: NavHostController) : ViewMode
     private val _passwordMode = MutableLiveData<Boolean>().apply { value = true }
     val passwordMode = _passwordMode
 
-    private val _passwordRecoverMode = MutableLiveData<Boolean>().apply { value = false }
-    val passwordRecoverMode: LiveData<Boolean> = _passwordRecoverMode
-
     fun onRegisterChanged(email: String, password: String, repeatPassword: String) {
         _email.value = email
         _password.value = password
@@ -36,10 +33,6 @@ class RegisterViewModel(private val navController: NavHostController) : ViewMode
 
     fun changePasswordMode() {
         _passwordMode.value = _passwordMode.value?.not()
-    }
-
-    fun changePasswordRecoverMode() {
-        _passwordRecoverMode.value = _passwordRecoverMode.value?.not()
     }
 
     suspend fun signUp(

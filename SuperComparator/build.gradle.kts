@@ -5,4 +5,6 @@ plugins {
     alias(libs.plugins.gms.googleServices) apply false
     alias(libs.plugins.kapt) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.parcelize) apply false
+    alias(libs.plugins.serializable) apply false
 }

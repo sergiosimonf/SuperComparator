@@ -1,7 +1,9 @@
 package com.tfg.supercomparator.application.service;
 
+import com.tfg.supercomparator.domain.ItemProductHistory;
 import com.tfg.supercomparator.domain.ProductHistory;
 import com.tfg.supercomparator.domain.ProductHistoryItem;
+import com.tfg.supercomparator.domain.ProductHistoryItems;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.CrudRepository;
@@ -11,49 +13,75 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public abstract class ProductService<T extends ProductHistoryItem, U extends ProductHistory, S extends CrudRepository<U, String>> {
-    private S repository;
+public abstract class ProductService<T extends ProductHistoryItem, Y extends ProductHistoryItems, U extends ProductHistory, S extends CrudRepository<U, String>> {
+
+    private final S repository;
 
     public ResponseEntity<T> saveProductHistory(T historicPrice) {
         if (historicPrice == null) {
-            log.error("Se intentó guardar un historial de producto nulo.");
+            log.error("Attempted to save a null product history.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        log.debug("Buscando producto con el id {}", historicPrice.getNombre());
-        Optional<U> productHistoryOptional = repository.findById(historicPrice.getNombre());
+        log.debug("Searching for product with id {}", historicPrice.getName());
+        Optional<U> productHistoryOptional = repository.findById(historicPrice.getName());
 
-        // Actualizar el historial del producto si existe
         if (productHistoryOptional.isPresent()) {
-            U productHistory = productHistoryOptional.get();
-            LocalDate latestDate = Collections.max(productHistory.getHistory().keySet());
-            double lastPrice = productHistory.getHistory().getOrDefault(latestDate, Double.MIN_VALUE);
-
-            // Si el precio más reciente es diferente al nuevo precio, se actualiza
-            log.debug("Comparando último precio almacenado : {} con el del producto actual {}", lastPrice, historicPrice.getPrice());
-            if (lastPrice != historicPrice.getPrice()) {
-                log.debug("Actualizando precio en el historial del producto: {}", historicPrice);
-                productHistory.getHistory().put(historicPrice.getFecha(), historicPrice.getPrice());
-                repository.save(productHistory);
-                return ResponseEntity.status(HttpStatus.OK).body(historicPrice);
-            } else {
-                // No hay cambios en el precio, no se realiza ninguna operación
-                log.debug("El precio del producto no ha sido modificado desde el último registro, no se realizan cambios del producto: {}", historicPrice);
-                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-            }
-
+            return updateExistingProductHistory(historicPrice, productHistoryOptional.get());
         } else {
-            // Crear un nuevo historial del producto si no existe
-            U newProductHistory = createNewProductHistory(historicPrice);
-            repository.save(newProductHistory);
-            return ResponseEntity.status(HttpStatus.CREATED).body(historicPrice);
+            return createNewProductHistory(historicPrice);
         }
     }
 
-    protected abstract U createNewProductHistory(T productHistory);
+    public ResponseEntity<Y> saveProductsHistory(Y historicPrices) {
+        if (historicPrices == null) {
+            log.error("Attempted to save a null list of product histories.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<T> listProductHistoryItem = createListProductHistoryItem(historicPrices);
+        listProductHistoryItem.parallelStream().forEach(this::saveProductHistory);
+
+        return ResponseEntity.status(HttpStatus.OK).body(historicPrices);
+    }
+
+    private ResponseEntity<T> updateExistingProductHistory(T historicPrice, U productHistory) {
+        LocalDate latestDate = Collections.max(productHistory.getHistory().keySet());
+        double lastPrice = productHistory.getHistory().getOrDefault(latestDate, Double.MIN_VALUE);
+
+        log.debug("Comparing last stored price: {} with the current product price {}", lastPrice, historicPrice.getPrice());
+        if (lastPrice != historicPrice.getPrice()) {
+            log.debug("Updating product history price: {}", historicPrice);
+            productHistory.getHistory().put(historicPrice.getFecha(), historicPrice.getPrice());
+            repository.save(productHistory);
+            return ResponseEntity.status(HttpStatus.OK).body(historicPrice);
+        } else {
+            log.debug("Product price has not changed since the last record, no updates made: {}", historicPrice);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+    }
+
+    private ResponseEntity<T> createNewProductHistory(T historicPrice) {
+        U newProductHistory = instantiateNewProductHistory(historicPrice);
+        repository.save(newProductHistory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(historicPrice);
+    }
+
+    protected abstract U instantiateNewProductHistory(T productHistory);
+
+
+    protected abstract T convertToProductHistoryItem(ItemProductHistory item, Y productHistory);
+
+    protected List<T> createListProductHistoryItem(Y productHistory) {
+        return productHistory.getProducts().stream()
+                .map(item -> convertToProductHistoryItem(item, productHistory))
+                .collect(Collectors.toList());
+    }
 }

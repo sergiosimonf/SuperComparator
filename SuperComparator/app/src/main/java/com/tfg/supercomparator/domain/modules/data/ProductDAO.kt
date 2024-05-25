@@ -18,6 +18,9 @@ interface ProductDAO {
     @Delete
     suspend fun deleteProduct(product: Product)
 
+    @Query("SELECT * FROM product WHERE name = :name")
+    suspend fun findByName(name: String): Product
+
     @Query("SELECT * FROM product")
     fun getAllProducts(): List<Product>
 

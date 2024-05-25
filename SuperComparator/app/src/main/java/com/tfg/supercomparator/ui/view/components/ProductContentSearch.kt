@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +28,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.domain.modules.model.product.Product
@@ -38,10 +38,10 @@ import com.tfg.supercomparator.viewModel.SearchScreemViewModel
 
 @Composable
 fun ProductContentSearch(
-    viewModel: SearchScreemViewModel = SearchScreemViewModel(),
-    database: AppDatabase
+    viewModel: SearchScreemViewModel,
+    database: AppDatabase,
+    navController: NavController
 ) {
-    val scope = rememberCoroutineScope()
     val searchItems: MutableList<Product>? by viewModel.searchProuducts.observeAsState()
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
 
@@ -100,7 +100,7 @@ fun ProductContentSearch(
                         Column(
                             modifier = Modifier.padding(8.dp)
                         ) {
-                            ProductCard(item, database)
+                            ProductCard(item, database, navController)
                         }
                     }
                 }

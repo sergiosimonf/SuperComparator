@@ -31,8 +31,8 @@ import kotlinx.coroutines.withContext
 
 class SearchScreemViewModel : ViewModel() {
 
-    private val _filters = MutableLiveData<Boolean>().apply { value = false }
-    val filters: LiveData<Boolean> = _filters
+    private val _queryExecuted = MutableLiveData<Boolean>().apply { value = false }
+    val queryExecuted: LiveData<Boolean> = _queryExecuted
 
     private val _expanded = MutableLiveData<Boolean>().apply { value = false }
     val expanded: LiveData<Boolean> = _expanded
@@ -89,7 +89,7 @@ class SearchScreemViewModel : ViewModel() {
         _searchProuducts.postValue(mutableListOf())
         products = mutableListOf()
 
-        _filters.value = true
+        _queryExecuted.value = true
 
         val totalQueries = mutableListOf<Deferred<Unit>>()
 
@@ -147,16 +147,12 @@ class SearchScreemViewModel : ViewModel() {
         }
     }
 
-    private fun checkFavoriteProducts() {
-
-    }
-
     private fun searchAhorramas(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
         val quote =
             withContext(Dispatchers.IO) { AhorramasServices().findProducts(query) }
         Log.e("Response", quote.toString())
         products.addAll(quote.mapToProductList())
-        Log.e("Response", _searchProuducts.value?.size.toString())
+        Log.e("Ahorrams", quote.toString())
     }
 
     private fun searchAlcampo(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
@@ -164,9 +160,8 @@ class SearchScreemViewModel : ViewModel() {
             withContext(Dispatchers.IO) {
                 AlcampoService().findProducts(query)
             }
-        Log.e("Response", quote.toString())
         products.addAll(quote.mapToProductList())
-        Log.e("Response", _searchProuducts.value?.size.toString())
+        Log.e("Alcampo", quote.toString())
     }
 
 
@@ -177,7 +172,7 @@ class SearchScreemViewModel : ViewModel() {
             }
         Log.e("Response", quote.toString())
         products.addAll(quote.mapToProductList())
-        Log.e("Response", _searchProuducts.value?.size.toString())
+        Log.e("Carrefour", quote.toString())
     }
 
 
@@ -187,7 +182,7 @@ class SearchScreemViewModel : ViewModel() {
                 DiaService().findProducts(query)
             }
         products.addAll(quote.mapToProductList())
-        Log.e("Quote Dia", quote.toString())
+        Log.e("Dia", quote.toString())
     }
 
 
@@ -197,7 +192,7 @@ class SearchScreemViewModel : ViewModel() {
                 EroskiService().findProducts(query)
             }
         products.addAll(quote.mapToProductList())
-        Log.e("Response", quote.toString())
+        Log.e("Eroski", quote.toString())
     }
 
 
@@ -207,7 +202,7 @@ class SearchScreemViewModel : ViewModel() {
                 HipercorService().findProducts(query)
             }
         products.addAll(quote.mapToProductList())
-        Log.e("Response", quote.toString())
+        Log.e("Hipercor", quote.toString())
     }
 
     private fun searchMercadona(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
@@ -216,7 +211,7 @@ class SearchScreemViewModel : ViewModel() {
                 MercadonaService().findProducts(query)
             }
         products.addAll(quote.mapToProductList())
-        Log.e("Response", quote.toString())
+        Log.e("Mercadona", quote.toString())
     }
 
     fun onQueryChanged(query: String) {

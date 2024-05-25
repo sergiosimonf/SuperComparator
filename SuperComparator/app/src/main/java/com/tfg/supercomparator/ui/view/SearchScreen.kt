@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.navigation.NavController
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.ui.theme.DarkGreen
@@ -54,9 +55,10 @@ import com.tfg.supercomparator.viewModel.SearchScreemViewModel
 @Composable
 fun SearchScreen(
     database: AppDatabase,
-    viewModel: SearchScreemViewModel = SearchScreemViewModel(),
+    navController: NavController,
+    viewModel: SearchScreemViewModel
 ) {
-    val queryExecuted: Boolean by viewModel.filters.observeAsState(initial = false)
+    val queryExecuted: Boolean by viewModel.queryExecuted.observeAsState(initial = false)
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -69,14 +71,13 @@ fun SearchScreen(
         }
         Spacer(modifier = Modifier.height(25.dp))
         Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxHeight()) {
-            ProductContentSearch(viewModel, database)
+            ProductContentSearch(viewModel, database, navController)
         }
     }
 }
 
 @Composable
 fun SupercMarketsIcons(viewModel: SearchScreemViewModel) {
-
     val ahorramasIconSearch: Boolean by viewModel.ahorramasIconSearch.observeAsState(initial = true)
     val alcampoIconSearch: Boolean by viewModel.alcampoIconSearch.observeAsState(initial = true)
     val carrefourIconSearch: Boolean by viewModel.carrefourIconSearch.observeAsState(initial = true)

@@ -3,16 +3,15 @@ package com.tfg.supercomparator.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class ProductHistory {
-    @Id
-    private String name;
-    private Map<LocalDate, Double> history;
+public abstract class ProductHistoryItems {
+    private LocalDate fecha;
+    private List<ItemProductHistory> products;
 }
+

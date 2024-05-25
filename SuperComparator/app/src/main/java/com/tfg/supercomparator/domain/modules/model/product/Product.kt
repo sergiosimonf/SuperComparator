@@ -1,9 +1,14 @@
 package com.tfg.supercomparator.domain.modules.model.product
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Entity
+@Parcelize
+@Serializable
 data class Product(
     @PrimaryKey
     val name: String,
@@ -21,4 +26,4 @@ data class Product(
     val hasOfertaExtra: Boolean,
     val tiendaIcon: Int,
     var isFavorite: Boolean = false
-)
+): Parcelable

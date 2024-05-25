@@ -29,6 +29,9 @@ ksp = "1.8.10-1.0.9"
 sqlite = "2.5.0-SNAPSHOT"
 roomKtx = "2.6.1"
 swiperefresh = "0.35.1-alpha"
+parcelize = "1.9.0"
+serializable = "1.9.0"
+serializable2 = "1.6.3"
 
 
 [libraries]
@@ -37,6 +40,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -48,6 +52,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material = { group = "androidx.compose.material", name = "material" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
 retrofitConverterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitConverterGson"}
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger"}
@@ -58,7 +63,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 swiperefresh = { group= "com.google.accompanist", name = "accompanist-swiperefresh", version.ref = "swiperefresh"}
-#androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+serializable = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializable2" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }
@@ -76,3 +81,5 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 gms-googleServices = { id = "com.google.gms.google-services", version.ref = "gms-googleServices"}
+parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelize"}
+serializable = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializable" }

@@ -110,10 +110,11 @@ private fun ForgotPasswordSection(
 
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Forgot password",
+            text = "Forgot your password?",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            color = uiColor
         )
     }
     Spacer(modifier = Modifier.size(15.dp))
@@ -149,7 +150,7 @@ private fun ForgotPasswordSection(
     }
     Spacer(modifier = Modifier.size(15.dp))
     Button(
-        onClick = { navController.navigate(AppScreens.LOGIN.ruta) },
+        onClick = { navController.popBackStack() },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(size = 4.dp),
         colors = ButtonDefaults.buttonColors(

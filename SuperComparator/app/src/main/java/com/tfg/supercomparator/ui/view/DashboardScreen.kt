@@ -50,6 +50,8 @@ import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.blackGray
 import com.tfg.supercomparator.viewModel.DashboardViewModel
+import com.tfg.supercomparator.viewModel.FavoriteViewModel
+import com.tfg.supercomparator.viewModel.SearchScreemViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -90,16 +92,16 @@ fun DashboardScreen(
                     modifier = Modifier
                         .fillMaxHeight(0.85f)
                 ) {
-                    when (selectedIndex.value) {
+                    when (selectedIndex.intValue) {
                         0 -> {
-                            SearchScreen(database)
+                            SearchScreen(database,navController, SearchScreemViewModel())
                         }
 
                         1 -> {
                         }
 
                         2 -> {
-                            FavoriteScreen(database)
+                            FavoriteScreen(database, FavoriteViewModel(),  navController)
                         }
 
                         3 -> {
