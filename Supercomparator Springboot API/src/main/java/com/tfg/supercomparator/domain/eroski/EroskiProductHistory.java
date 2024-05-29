@@ -14,7 +14,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 public class EroskiProductHistory extends ProductHistory {
-    public EroskiProductHistory(String nombre, Map<LocalDate, Double> history) {
+    public EroskiProductHistory(String nombre, Map<LocalDate, Float> history) {
         super(nombre, history);
     }
 

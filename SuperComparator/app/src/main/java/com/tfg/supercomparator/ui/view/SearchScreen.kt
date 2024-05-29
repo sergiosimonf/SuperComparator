@@ -59,6 +59,7 @@ fun SearchScreen(
     viewModel: SearchScreemViewModel
 ) {
     val queryExecuted: Boolean by viewModel.queryExecuted.observeAsState(initial = false)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

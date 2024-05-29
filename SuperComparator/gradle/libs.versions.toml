@@ -32,6 +32,7 @@ swiperefresh = "0.35.1-alpha"
 parcelize = "1.9.0"
 serializable = "1.9.0"
 serializable2 = "1.6.3"
+vico = "2.0.0-alpha.20"
 
 
 [libraries]
@@ -64,6 +65,9 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 swiperefresh = { group= "com.google.accompanist", name = "accompanist-swiperefresh", version.ref = "swiperefresh"}
 serializable = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializable2" }
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }

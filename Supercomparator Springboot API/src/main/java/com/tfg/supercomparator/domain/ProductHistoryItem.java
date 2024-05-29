@@ -12,5 +12,5 @@ import java.time.LocalDate;
 public abstract class ProductHistoryItem {
     private String name;
     private LocalDate fecha;
-    private double price;
+    private Float price;
 }

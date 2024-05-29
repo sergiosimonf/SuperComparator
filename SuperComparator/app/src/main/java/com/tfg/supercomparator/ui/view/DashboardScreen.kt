@@ -63,7 +63,7 @@ fun DashboardScreen(
     database: AppDatabase,
 ) {
     analytics.LogScreenView(screenName = AppScreens.DASHBOARD.ruta)
-    val selectedIndex = remember { mutableIntStateOf(0) }
+    val selectedIndex = remember { mutableIntStateOf(1) }
     val showDialog by viewModel.showDialog.observeAsState(initial = false)
 
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
@@ -90,21 +90,18 @@ fun DashboardScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxHeight(0.85f)
+                        .fillMaxHeight(0.85f),
                 ) {
                     when (selectedIndex.intValue) {
                         0 -> {
-                            SearchScreen(database,navController, SearchScreemViewModel())
-                        }
-
-                        1 -> {
-                        }
-
-                        2 -> {
                             FavoriteScreen(database, FavoriteViewModel(),  navController)
                         }
 
-                        3 -> {
+                        1 -> {
+                            SearchScreen(database,navController, SearchScreemViewModel())
+                        }
+
+                        2 -> {
                             UserScreen(
                                 analytics = analytics,
                                 auth = auth,
@@ -164,14 +161,15 @@ fun CustomTopAppBar(viewModel: DashboardViewModel) {
 @Composable
 fun CustomBottomBar(selectedIndex: MutableState<Int>) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
-    val listItems = listOf("Search", "Lists", "Favorite", "Profile")
+    val listItems = listOf("Search", "Favorite", "Profile")
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 22.dp)
+            .padding(start = 46.dp, end = 46.dp, top = 22.dp)
             .height(64.dp)
             .clip(RoundedCornerShape(25.dp))
             .background(uiColor),
+        contentAlignment = Alignment.Center
     ) {
         BottomNavigation(elevation = 0.dp, backgroundColor = uiColor) {
             listItems.forEachIndexed { index, label ->
@@ -181,26 +179,19 @@ fun CustomBottomBar(selectedIndex: MutableState<Int>) {
                         when (index) {
                             0 -> {
                                 TabIcons(
-                                    painterResource(id = R.drawable.search),
+                                    painterResource(id = R.drawable.heart),
                                     isSelected
                                 )
                             }
 
                             1 -> {
                                 TabIcons(
-                                    painterResource(id = R.drawable.list),
+                                    painterResource(id = R.drawable.search),
                                     isSelected
                                 )
                             }
 
                             2 -> {
-                                TabIcons(
-                                    painterResource(id = R.drawable.heart),
-                                    isSelected
-                                )
-                            }
-
-                            3 -> {
                                 TabIcons(
                                     painterResource(id = R.drawable.profile),
                                     isSelected

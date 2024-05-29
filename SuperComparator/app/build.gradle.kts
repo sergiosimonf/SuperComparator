@@ -55,13 +55,14 @@ android {
 }
 
 dependencies {
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m3)
+    implementation(libs.vico.core)
     implementation(libs.serializable)
     implementation(libs.swiperefresh)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-//    ksp(libs.room.compiler)
     kapt(libs.room.compiler)
-//    implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.analytics)
     implementation(libs.jsoup)

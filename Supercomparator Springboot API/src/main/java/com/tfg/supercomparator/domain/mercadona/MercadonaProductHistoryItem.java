@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 public class MercadonaProductHistoryItem extends ProductHistoryItem {
-    public MercadonaProductHistoryItem(String nombre, LocalDate fecha, double price) {
+    public MercadonaProductHistoryItem(String nombre, LocalDate fecha, Float price) {
         super(nombre, fecha, price);
     }
 

@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 public class HipercorScraperImpl extends DriverSupplier implements HipercorScraper {
 
     private static final int TAMAÑO_IMAGEN = 325;
-    private final List<HipercorProduct> hipercorProducts = new ArrayList<>();
     private WebDriver driver = super.getDriver();
 
     private static double getPrecioPorUnidad(JsonObject price) {
@@ -52,6 +51,8 @@ public class HipercorScraperImpl extends DriverSupplier implements HipercorScrap
     }
 
     public List<HipercorProduct> searchProduct(String productQuery) {
+        List<HipercorProduct> hipercorProducts = new ArrayList<>();
+
         driver.get("https://www.hipercor.es/alimentacion/api/catalog/supermercado/type_ahead/?question=" + productQuery + "&scope=supermarket&center=010MOH&results=24");
 
         String pageSource = driver.getPageSource();

@@ -14,5 +14,5 @@ import java.util.Map;
 public abstract class ProductHistory {
     @Id
     private String name;
-    private Map<LocalDate, Double> history;
+    private Map<LocalDate, Float> history;
 }

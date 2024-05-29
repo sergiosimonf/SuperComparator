@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ItemProductHistory {
     private String nombre;
-    private double price;
+    private Float price;
 }

@@ -3,7 +3,6 @@ package com.tfg.supercomparator.ui.view
 import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -20,8 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -52,7 +48,6 @@ import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
 import com.tfg.supercomparator.domain.modules.auth.AuthManager
 import com.tfg.supercomparator.ui.navigation.AppScreens
 import com.tfg.supercomparator.ui.theme.DarkGreen
-import com.tfg.supercomparator.ui.theme.GrayBanished
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.theme.Roboto
 import com.tfg.supercomparator.ui.view.components.RegisterTextField
@@ -73,22 +68,25 @@ fun RegisterScreen(
     val context = LocalContext.current
 
     Surface(color = uiColor) {
-        Box(
-            contentAlignment = Alignment.TopCenter
-        ) {
+        Column(
+//            contentAlignment = Alignment.TopCenter
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+        )  {
             TopSection()
             Card(
                 shape = RoundedCornerShape(topStart = 45.dp, topEnd = 45.dp),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 240.dp)
+                    .padding(top = 40.dp)
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 25.dp)
-                        .verticalScroll(rememberScrollState()),
+                        .padding(horizontal = 25.dp),
+//                        .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     RegisterSection(viewModel, auth, analytics, scope, navController, context)
@@ -105,7 +103,6 @@ fun RegisterScreen(
 @Composable
 private fun RegisterSectionBotom(navController: NavHostController, viewModel: RegisterViewModel) {
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
-
     Column {
         Row(
             modifier = Modifier
@@ -143,6 +140,7 @@ private fun RegisterSectionBotom(navController: NavHostController, viewModel: Re
             })
         }
     }
+    Spacer(modifier = Modifier.height(40.dp))
 }
 
 @Composable

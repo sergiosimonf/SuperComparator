@@ -13,7 +13,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 public class AlcampoProductHistory extends ProductHistory {
-    public AlcampoProductHistory(String nombre, Map<LocalDate, Double> history) {
+    public AlcampoProductHistory(String nombre, Map<LocalDate, Float> history) {
         super(nombre, history);
     }
 

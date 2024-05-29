@@ -18,12 +18,10 @@ import com.tfg.supercomparator.domain.modules.data.DatabaseProvider
 import com.tfg.supercomparator.domain.modules.model.product.Product
 import com.tfg.supercomparator.ui.view.DashboardScreen
 import com.tfg.supercomparator.ui.view.ForgotPasswordScreen
-import com.tfg.supercomparator.ui.view.ImageScren
 import com.tfg.supercomparator.ui.view.LoginScreen
 import com.tfg.supercomparator.ui.view.ProductScreen
 import com.tfg.supercomparator.ui.view.RegisterScreen
 import com.tfg.supercomparator.ui.view.SplashScreen
-import com.tfg.supercomparator.ui.view.test.MovableContentScreen
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -82,29 +80,24 @@ fun AppNavigation(context: Context, navController: NavHostController = rememberN
                 database = database
             )
         }
-        composable(AppScreens.MOVABLE.ruta) {
-            MovableContentScreen()
-        }
-        composable(AppScreens.IMAGE.ruta) {
-            ImageScren()
-        }
     }
 }
 
-inline fun <reified T : Parcelable> parcelableOf() = object : NavType<T>(isNullableAllowed = false) {
-    override fun get(bundle: Bundle, key: String): T? {
-        return bundle.getParcelable(key) as T?
-    }
+inline fun <reified T : Parcelable> parcelableOf() =
+    object : NavType<T>(isNullableAllowed = false) {
+        override fun get(bundle: Bundle, key: String): T? {
+            return bundle.getParcelable(key) as T?
+        }
 
-    override fun parseValue(value: String): T {
-        return Json.decodeFromString(Uri.decode(value))
-    }
+        override fun parseValue(value: String): T {
+            return Json.decodeFromString(Uri.decode(value))
+        }
 
-    override fun put(bundle: Bundle, key: String, value: T) {
-        bundle.putParcelable(key, value)
-    }
+        override fun put(bundle: Bundle, key: String, value: T) {
+            bundle.putParcelable(key, value)
+        }
 
-}
+    }
 
 val ProductNavType = object : NavType<Product>(isNullableAllowed = false) {
     override fun put(bundle: Bundle, key: String, value: Product) {

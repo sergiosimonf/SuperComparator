@@ -18,10 +18,9 @@ public class MercadonaScraperImpl extends DriverSupplier implements MercadonaScr
 
     private String name = "";
 
-    private List<MercadonaProduct> mercadonaProductList = new ArrayList<>();
-
     public List<MercadonaProduct> searchProduct(String productQuery) {
         String pageSource;
+        List<MercadonaProduct> mercadonaProductList = new ArrayList<>();
 
         do {
             FirefoxDriver driver = super.getDriver();

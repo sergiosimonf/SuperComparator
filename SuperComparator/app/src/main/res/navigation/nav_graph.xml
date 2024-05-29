@@ -13,4 +13,5 @@
             android:name="com.tfg.supercomparator.ui.view.MainViewSuperComparator"
             android:label="MainViewSuperComparator" />
     </navigation>
+    <fragment android:id="@+id/placeholder2" />
 </navigation>

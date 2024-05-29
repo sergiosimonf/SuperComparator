@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 public class HipercorProductHistoryItem extends ProductHistoryItem {
-    public HipercorProductHistoryItem(String nombre, LocalDate fecha, double price) {
+    public HipercorProductHistoryItem(String nombre, LocalDate fecha, Float price) {
         super(nombre, fecha, price);
     }
 

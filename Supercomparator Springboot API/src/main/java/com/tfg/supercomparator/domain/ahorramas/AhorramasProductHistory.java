@@ -9,7 +9,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 public class AhorramasProductHistory extends ProductHistory {
-    public AhorramasProductHistory(String nombre, Map<LocalDate, Double> localDateDoubleMap) {
+    public AhorramasProductHistory(String nombre, Map<LocalDate, Float> localDateDoubleMap) {
         super(nombre, localDateDoubleMap);
     }
 

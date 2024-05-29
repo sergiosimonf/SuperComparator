@@ -9,7 +9,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 public class CarrefourProductHistory extends ProductHistory {
-    public CarrefourProductHistory(String nombre, Map<LocalDate, Double> history) {
+    public CarrefourProductHistory(String nombre, Map<LocalDate, Float> history) {
         super(nombre, history);
     }
 

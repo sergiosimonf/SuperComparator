@@ -2,7 +2,6 @@ package com.tfg.supercomparator.ui.view.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,12 +22,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.data.AppDatabase
-import com.tfg.supercomparator.ui.theme.DarkGreen
-import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.viewModel.SearchScreemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,12 +38,9 @@ import kotlinx.coroutines.withContext
 fun SearchBarSuperProducts(viewModel: SearchScreemViewModel, database: AppDatabase) {
     val query: String by viewModel.query.observeAsState(initial = "")
     val seachBarActiveMode: Boolean by viewModel.seachBarActiveMode.observeAsState(initial = false)
-
     val scope = rememberCoroutineScope()
-
     val searchHistory by remember { mutableStateOf(mutableListOf<String>()) }
-
-    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+    val context = LocalContext.current
 
     DockedSearchBar(
         modifier = Modifier
@@ -54,7 +49,8 @@ fun SearchBarSuperProducts(viewModel: SearchScreemViewModel, database: AppDataba
         query = query,
         onQueryChange = { viewModel.onQueryChanged(it) },
         onSearch = { newQuery ->
-            if (newQuery.isNotEmpty()) {
+            val isCoexionAvaible = viewModel.isInternetAvailable(context)
+            if (newQuery.isNotEmpty() && isCoexionAvaible) {
                 viewModel.unSeachBarActiveMode()
                 viewModel.executeQuery(database)
                 scope.launch {
@@ -75,9 +71,6 @@ fun SearchBarSuperProducts(viewModel: SearchScreemViewModel, database: AppDataba
         },
         trailingIcon = {
             Row {
-//                IconButton(onClick = { viewModel.onFitersEvent() }) {
-//                    Icon(painter = painterResource(R.drawable.filter), contentDescription = "Filters", modifier = Modifier.size(24.dp))
-//                }
                 if (seachBarActiveMode) {
                     IconButton(
                         onClick = { if (query.isNotEmpty()) viewModel.queryClear() else viewModel.unSeachBarActiveMode() }

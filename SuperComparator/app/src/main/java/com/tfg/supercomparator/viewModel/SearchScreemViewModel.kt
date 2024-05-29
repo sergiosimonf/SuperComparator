@@ -1,5 +1,8 @@
 package com.tfg.supercomparator.viewModel
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,6 +36,12 @@ class SearchScreemViewModel : ViewModel() {
 
     private val _queryExecuted = MutableLiveData<Boolean>().apply { value = false }
     val queryExecuted: LiveData<Boolean> = _queryExecuted
+
+    private val _intennetCoexion = MutableLiveData<Boolean>().apply { value = false }
+    val internetCoexion: LiveData<Boolean> = _intennetCoexion
+
+    private val _isNotificado = MutableLiveData<Boolean>().apply { value = false }
+    val isNotificado: LiveData<Boolean> = _isNotificado
 
     private val _expanded = MutableLiveData<Boolean>().apply { value = false }
     val expanded: LiveData<Boolean> = _expanded
@@ -90,6 +99,7 @@ class SearchScreemViewModel : ViewModel() {
         products = mutableListOf()
 
         _queryExecuted.value = true
+        _expanded.value = false
 
         val totalQueries = mutableListOf<Deferred<Unit>>()
 
@@ -147,72 +157,105 @@ class SearchScreemViewModel : ViewModel() {
         }
     }
 
-    private fun searchAhorramas(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) { AhorramasServices().findProducts(query) }
-        Log.e("Response", quote.toString())
-        products.addAll(quote.mapToProductList())
-        Log.e("Ahorrams", quote.toString())
-    }
-
-    private fun searchAlcampo(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) {
-                AlcampoService().findProducts(query)
+    private fun searchAhorramas(query: String): Deferred<Unit> =
+        viewModelScope.async(Dispatchers.IO) {
+            try {
+                val quote =
+                    withContext(Dispatchers.IO) { AhorramasServices().findProducts(query) }
+                Log.e("Response", quote.toString())
+                products.addAll(quote.mapToProductList())
+                Log.e("Ahorrams", quote.toString())
+            } catch (ex: Exception) {
+                Log.d("Ahorramas Error", ex.toString())
             }
-        products.addAll(quote.mapToProductList())
-        Log.e("Alcampo", quote.toString())
-    }
+        }
 
-
-    private fun searchCarrefour(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) {
-                CarrefourSercice().findProducts(query)
+    private fun searchAlcampo(query: String): Deferred<Unit> =
+        viewModelScope.async(Dispatchers.IO) {
+            try {
+                val quote =
+                    withContext(Dispatchers.IO) {
+                        AlcampoService().findProducts(query)
+                    }
+                products.addAll(quote.mapToProductList())
+                Log.e("Alcampo", quote.toString())
+            } catch (ex: Exception) {
+                Log.d("Alcampo Error", ex.toString())
             }
-        Log.e("Response", quote.toString())
-        products.addAll(quote.mapToProductList())
-        Log.e("Carrefour", quote.toString())
-    }
+        }
+
+
+    private fun searchCarrefour(query: String): Deferred<Unit> =
+        viewModelScope.async(Dispatchers.IO) {
+            try {
+                val quote =
+                    withContext(Dispatchers.IO) {
+                        CarrefourSercice().findProducts(query)
+                    }
+                Log.e("Response", quote.toString())
+                products.addAll(quote.mapToProductList())
+                Log.e("Carrefour", quote.toString())
+            } catch (ex: Exception) {
+                Log.d("Carrefour Error", ex.toString())
+            }
+        }
 
 
     private fun searchDia(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) {
-                DiaService().findProducts(query)
-            }
-        products.addAll(quote.mapToProductList())
-        Log.e("Dia", quote.toString())
+        try {
+            val quote =
+                withContext(Dispatchers.IO) {
+                    DiaService().findProducts(query)
+                }
+            products.addAll(quote.mapToProductList())
+            Log.e("Dia", quote.toString())
+        } catch (ex: Exception) {
+            Log.d("Dia Error", ex.toString())
+        }
     }
 
 
     private fun searchEroski(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) {
-                EroskiService().findProducts(query)
-            }
-        products.addAll(quote.mapToProductList())
-        Log.e("Eroski", quote.toString())
+        try {
+            val quote =
+                withContext(Dispatchers.IO) {
+                    EroskiService().findProducts(query)
+                }
+            products.addAll(quote.mapToProductList())
+            Log.e("Eroski", quote.toString())
+        } catch (ex: Exception) {
+            Log.d("Eroski Error", ex.toString())
+        }
     }
 
 
-    private fun searchHipercor(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) {
-                HipercorService().findProducts(query)
+    private fun searchHipercor(query: String): Deferred<Unit> =
+        viewModelScope.async(Dispatchers.IO) {
+            try {
+                val quote =
+                    withContext(Dispatchers.IO) {
+                        HipercorService().findProducts(query)
+                    }
+                products.addAll(quote.mapToProductList())
+                Log.e("Hipercor", quote.toString())
+            } catch (ex: Exception) {
+                Log.d("Hipercor Error", ex.toString())
             }
-        products.addAll(quote.mapToProductList())
-        Log.e("Hipercor", quote.toString())
-    }
+        }
 
-    private fun searchMercadona(query: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
-        val quote =
-            withContext(Dispatchers.IO) {
-                MercadonaService().findProducts(query)
+    private fun searchMercadona(query: String): Deferred<Unit> =
+        viewModelScope.async(Dispatchers.IO) {
+            try {
+                val quote =
+                    withContext(Dispatchers.IO) {
+                        MercadonaService().findProducts(query)
+                    }
+                products.addAll(quote.mapToProductList())
+                Log.e("Mercadona", quote.toString())
+            } catch (ex: Exception) {
+                Log.d("Mercadona Error", ex.toString())
             }
-        products.addAll(quote.mapToProductList())
-        Log.e("Mercadona", quote.toString())
-    }
+        }
 
     fun onQueryChanged(query: String) {
         _query.value = query
@@ -276,5 +319,17 @@ class SearchScreemViewModel : ViewModel() {
 
     fun selectText(sortType: String) {
         _selectedSortType.value = sortType
+    }
+
+    fun changeNotificationStatus(notification: Boolean) {
+        _isNotificado.value = notification
+    }
+
+    fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        _intennetCoexion.value = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

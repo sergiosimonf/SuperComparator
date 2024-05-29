@@ -54,7 +54,7 @@ public abstract class ProductService<T extends ProductHistoryItem, Y extends Pro
 
     private ResponseEntity<T> updateExistingProductHistory(T historicPrice, U productHistory) {
         LocalDate latestDate = Collections.max(productHistory.getHistory().keySet());
-        double lastPrice = productHistory.getHistory().getOrDefault(latestDate, Double.MIN_VALUE);
+        double lastPrice = productHistory.getHistory().getOrDefault(latestDate, Float.MIN_VALUE);
 
         log.debug("Comparing last stored price: {} with the current product price {}", lastPrice, historicPrice.getPrice());
         if (lastPrice != historicPrice.getPrice()) {

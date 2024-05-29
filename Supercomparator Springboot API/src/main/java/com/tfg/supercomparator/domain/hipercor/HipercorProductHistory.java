@@ -13,7 +13,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 public class HipercorProductHistory extends ProductHistory {
-    public HipercorProductHistory(String nombre, Map<LocalDate, Double> history) {
+    public HipercorProductHistory(String nombre, Map<LocalDate, Float> history) {
         super(nombre, history);
     }
 

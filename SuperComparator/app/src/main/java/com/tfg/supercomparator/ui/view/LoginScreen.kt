@@ -9,7 +9,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -116,22 +115,25 @@ fun LoginScreen(
 
 
     Surface(color = uiColor) {
-        Box(
-            contentAlignment = Alignment.TopCenter
+        Column(
+//            contentAlignment = Alignment.TopCenter
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
         ) {
             TopSection()
             Card(
                 shape = RoundedCornerShape(topStart = 45.dp, topEnd = 45.dp),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 240.dp)
+                    .padding(top = 40.dp)
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 25.dp)
-                        .verticalScroll(rememberScrollState()),
+                        .padding(horizontal = 25.dp),
+//                        .verticalScroll(rememberScrollState())
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     LoginSection(viewModel, auth, analytics, scope, context, navController)

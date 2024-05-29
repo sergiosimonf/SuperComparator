@@ -14,7 +14,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 public class DiaProductHistory extends ProductHistory {
-    public DiaProductHistory(String nombre, Map<LocalDate, Double> history) {
+    public DiaProductHistory(String nombre, Map<LocalDate, Float> history) {
         super(nombre, history);
     }
 

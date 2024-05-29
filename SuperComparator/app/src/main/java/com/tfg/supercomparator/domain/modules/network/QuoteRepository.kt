@@ -8,6 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object QuoteRepository {
 
     var apiConexion = false
+    var intennetCoexion = true
 
     fun getDiaProduct(): DiaQuoteService {
         return Retrofit.Builder()
@@ -42,6 +43,8 @@ object QuoteRepository {
         return Jsoup.connect(url).get()
     }
 
+    // 172.26.160.1
+    // 192.168.1.113
     fun getSupercomparatorAPIClient(): Retrofit {
         return Retrofit.Builder()
             .baseUrl("http://192.168.1.113:8080/")

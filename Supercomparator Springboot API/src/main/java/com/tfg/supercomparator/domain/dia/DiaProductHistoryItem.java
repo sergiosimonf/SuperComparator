@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 public class DiaProductHistoryItem extends ProductHistoryItem {
-    public DiaProductHistoryItem(String nombre, LocalDate fecha, double price) {
+    public DiaProductHistoryItem(String nombre, LocalDate fecha, Float price) {
         super(nombre, fecha, price);
     }
 
