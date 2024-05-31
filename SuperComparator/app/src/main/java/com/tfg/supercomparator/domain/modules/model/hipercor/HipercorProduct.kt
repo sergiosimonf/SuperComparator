@@ -1,7 +1,10 @@
 package com.tfg.supercomparator.domain.modules.model.hipercor
 
 import com.tfg.supercomparator.R
+import com.tfg.supercomparator.domain.modules.model.product.ItemProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.Product
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
+import java.time.LocalDate
 
 data class HipercorProduct(
     val nombre: String,
@@ -36,4 +39,17 @@ fun HipercorProduct.mapToProduct(): Product {
 
 fun List<HipercorProduct>.mapToProductList(): List<Product> {
     return this.map { it.mapToProduct() }
+}
+
+fun List<HipercorProduct>.toProductHistoryItems(): ProductHistoryItems {
+    val items = this.map { product ->
+        ItemProductHistory(
+            nombre = product.nombre,
+            price = product.precio.toFloat()
+        )
+    }
+    return ProductHistoryItems(
+        fecha = LocalDate.now().toString(),
+        products = items
+    )
 }

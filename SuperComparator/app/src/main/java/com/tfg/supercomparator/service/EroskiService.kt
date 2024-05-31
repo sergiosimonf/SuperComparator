@@ -1,7 +1,11 @@
 package com.tfg.supercomparator.service
 
 import com.tfg.supercomparator.domain.modules.model.eroski.EroskiProduct
+import com.tfg.supercomparator.domain.modules.model.eroski.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
+import com.tfg.supercomparator.domain.modules.network.EroskiQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
+import retrofit2.Response
 
 class EroskiService : SearchProduct<EroskiProduct> {
     override suspend fun findProducts(query: String): List<EroskiProduct> {
@@ -29,5 +33,12 @@ class EroskiService : SearchProduct<EroskiProduct> {
             )
         }
         return eroskiProductList
+    }
+
+    override suspend fun saveProductHistory(product: List<EroskiProduct>): Response<ProductHistoryItems> {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(EroskiQuoteService::class.java)
+            .saveHistory(product.toProductHistoryItems())
     }
 }

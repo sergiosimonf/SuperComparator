@@ -1,6 +1,7 @@
 package com.tfg.supercomparator.ui.view
 
 import android.content.ContentValues
+import android.graphics.Typeface
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,11 +20,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,15 +45,47 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
+import com.patrykandpatrick.vico.compose.cartesian.decoration.rememberHorizontalLine
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineSpec
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.of
+import com.patrykandpatrick.vico.compose.common.shader.color
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
+import com.patrykandpatrick.vico.core.common.Dimensions
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import com.patrykandpatrick.vico.core.common.shader.DynamicShader
+import com.patrykandpatrick.vico.core.common.shape.Shape
 import com.tfg.supercomparator.R
 import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.ui.theme.DarkGreen
 import com.tfg.supercomparator.ui.theme.Green
 import com.tfg.supercomparator.ui.view.components.FavoriteButton
+import com.tfg.supercomparator.ui.view.components.rememberMarker
 import com.tfg.supercomparator.viewModel.ProductViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+
+private var data =
+    mutableMapOf(
+        LocalDate.parse("2022-07-01") to 2f,
+        LocalDate.parse("2022-07-09") to 6f,
+//        LocalDate.parse("2022-07-04") to 4f,
+    )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +97,21 @@ fun ProductScreen(
     val scope = rememberCoroutineScope()
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
     val product = viewModel.state!!
+    val modelProducer = remember { CartesianChartModelProducer.build() }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.Default) {
+            val xToDates = data.keys.associateBy { it.toEpochDay().toFloat() }
+            modelProducer.tryRunTransaction {
+                lineSeries { series(xToDates.keys, data.values) }
+                updateExtras { it[xToDateMapKey] = xToDates }
+            }
+        }
+    }
+
+
+    data.put(LocalDate.parse("2022-07-04"), 4f)
+    data.put(LocalDate.parse("2022-07-15"), 3f)
 
     Scaffold(
         topBar = {
@@ -85,15 +133,15 @@ fun ProductScreen(
                 }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                containerColor = uiColor,
-                contentColor = Color.White,
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        }
+//        floatingActionButton = {
+//            FloatingActionButton(
+//                onClick = {  },
+//                containerColor = uiColor,
+//                contentColor = Color.White,
+//            ) {
+//                Icon(Icons.Default.Add, contentDescription = "Add")
+//            }
+//        }
     ) { innerPadding ->
         Card(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -222,10 +270,40 @@ fun ProductScreen(
                             style = MaterialTheme.typography.headlineSmall,
                         )
                     }
+                    Spacer(modifier = Modifier.size(20.dp))
+                    Box(modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxSize()){
+                        ChartHistoryPrice(modelProducer = modelProducer, modifier = Modifier)
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun ChartHistoryPrice(
+    modelProducer: CartesianChartModelProducer,
+    modifier: Modifier,
+) {
+    val marker = rememberMarker()
+    val uiColor =if (isSystemInDarkTheme()) DarkGreen else Green
+    CartesianChartHost(
+        chart =
+        rememberCartesianChart(
+            rememberLineCartesianLayer(listOf(rememberLineSpec(DynamicShader.color(uiColor)))),
+            startAxis = rememberStartAxis(),
+            bottomAxis = rememberBottomAxis(
+                valueFormatter = bottomAxisValueFormatter,
+            ),
+            decorations = listOf(rememberComposeHorizontalLine())
+        ),
+        modelProducer = modelProducer,
+        modifier = modifier,
+        marker = marker,
+        zoomState = rememberVicoZoomState(zoomEnabled = true),
+    )
 }
 
 @Composable
@@ -247,9 +325,48 @@ private fun OfferBadge(priceNoOfert: Double?, priceOfert: Double?) {
     }
 }
 
+@Composable
+private fun rememberComposeHorizontalLine(): HorizontalLine {
+
+    val HORIZONTAL_LINE_THICKNESS_DP = 2f
+    val HORIZONTAL_LINE_LABEL_HORIZONTAL_PADDING_DP = 8f
+    val HORIZONTAL_LINE_LABEL_VERTICAL_PADDING_DP = 2f
+    val HORIZONTAL_LINE_LABEL_MARGIN_DP = 4f
+
+    val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
+    val total = data.values.sum()  // Sumar todos los valores
+    val average = total / data.size.toFloat()  // Calcular el promedio
+    return rememberHorizontalLine(
+        y = { average },
+        line = rememberLineComponent(uiColor, HORIZONTAL_LINE_THICKNESS_DP.dp),
+        labelComponent =
+        rememberTextComponent(
+            background = rememberShapeComponent(Shape.Pill, uiColor),
+            padding =
+            Dimensions.of(
+                HORIZONTAL_LINE_LABEL_HORIZONTAL_PADDING_DP.dp,
+                HORIZONTAL_LINE_LABEL_VERTICAL_PADDING_DP.dp,
+            ),
+            margins = Dimensions.of(HORIZONTAL_LINE_LABEL_MARGIN_DP.dp),
+            typeface = Typeface.MONOSPACE,
+        ),
+    )
+}
+
+
 
 fun calcularPorcentajeDeOferta(precioOriginal: Double, precioOferta: Double): Int {
     val diferencia = precioOriginal - precioOferta
 
     return (diferencia / precioOriginal * 100).toInt()
 }
+
+private val xToDateMapKey = ExtraStore.Key<Map<Float, LocalDate>>()
+
+private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM uuuu")
+
+private val bottomAxisValueFormatter =
+    CartesianValueFormatter { x, chartValues, _ ->
+        (chartValues.model.extraStore[xToDateMapKey][x] ?: LocalDate.ofEpochDay(x.toLong()))
+            .format(dateTimeFormatter)
+    }

@@ -4,7 +4,11 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.tfg.supercomparator.domain.modules.model.alcampo.gson.Alcampo
 import com.tfg.supercomparator.domain.modules.model.alcampo.product.AlcampoProduct
+import com.tfg.supercomparator.domain.modules.model.alcampo.product.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
+import com.tfg.supercomparator.domain.modules.network.AlcampoQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
+import retrofit2.Response
 
 class AlcampoService : SearchProduct<AlcampoProduct> {
     override suspend fun findProducts(query: String): List<AlcampoProduct> {
@@ -40,6 +44,13 @@ class AlcampoService : SearchProduct<AlcampoProduct> {
         }
 
         return alcampoProductList
+    }
+
+    override suspend fun saveProductHistory(product: List<AlcampoProduct>): Response<ProductHistoryItems> {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(AlcampoQuoteService::class.java)
+            .saveHistory(product.toProductHistoryItems())
     }
 
     private fun formatPriceUnit(unit: String): String {

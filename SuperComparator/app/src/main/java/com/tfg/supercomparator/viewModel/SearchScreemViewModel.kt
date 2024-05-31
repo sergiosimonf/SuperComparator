@@ -165,6 +165,12 @@ class SearchScreemViewModel : ViewModel() {
                 Log.e("Response", quote.toString())
                 products.addAll(quote.mapToProductList())
                 Log.e("Ahorrams", quote.toString())
+                if (QuoteRepository.apiConexion) {
+                    withContext(Dispatchers.IO) {
+                        val response = AhorramasServices().saveProductHistory(quote)
+                        Log.d("Ahorramas response", response.errorBody().toString())
+                    }
+                }
             } catch (ex: Exception) {
                 Log.d("Ahorramas Error", ex.toString())
             }
@@ -179,6 +185,11 @@ class SearchScreemViewModel : ViewModel() {
                     }
                 products.addAll(quote.mapToProductList())
                 Log.e("Alcampo", quote.toString())
+                if (QuoteRepository.apiConexion) {
+                    withContext(Dispatchers.IO) {
+                        AlcampoService().saveProductHistory(quote)
+                    }
+                }
             } catch (ex: Exception) {
                 Log.d("Alcampo Error", ex.toString())
             }
@@ -195,6 +206,11 @@ class SearchScreemViewModel : ViewModel() {
                 Log.e("Response", quote.toString())
                 products.addAll(quote.mapToProductList())
                 Log.e("Carrefour", quote.toString())
+                if (QuoteRepository.apiConexion) {
+                    withContext(Dispatchers.IO) {
+                        CarrefourSercice().saveProductHistory(quote)
+                    }
+                }
             } catch (ex: Exception) {
                 Log.d("Carrefour Error", ex.toString())
             }
@@ -209,6 +225,11 @@ class SearchScreemViewModel : ViewModel() {
                 }
             products.addAll(quote.mapToProductList())
             Log.e("Dia", quote.toString())
+            if (QuoteRepository.apiConexion) {
+                withContext(Dispatchers.IO) {
+                    DiaService().saveProductHistory(quote)
+                }
+            }
         } catch (ex: Exception) {
             Log.d("Dia Error", ex.toString())
         }
@@ -223,14 +244,19 @@ class SearchScreemViewModel : ViewModel() {
                 }
             products.addAll(quote.mapToProductList())
             Log.e("Eroski", quote.toString())
+            if (QuoteRepository.apiConexion) {
+                withContext(Dispatchers.IO) {
+                    EroskiService().saveProductHistory(quote)
+                }
+            }
         } catch (ex: Exception) {
             Log.d("Eroski Error", ex.toString())
         }
     }
 
-
     private fun searchHipercor(query: String): Deferred<Unit> =
         viewModelScope.async(Dispatchers.IO) {
+            Log.e("Hipercor", "Iniciando busqueda")
             try {
                 val quote =
                     withContext(Dispatchers.IO) {
@@ -238,6 +264,9 @@ class SearchScreemViewModel : ViewModel() {
                     }
                 products.addAll(quote.mapToProductList())
                 Log.e("Hipercor", quote.toString())
+                withContext(Dispatchers.IO) {
+                    HipercorService().saveProductHistory(quote)
+                }
             } catch (ex: Exception) {
                 Log.d("Hipercor Error", ex.toString())
             }
@@ -252,6 +281,9 @@ class SearchScreemViewModel : ViewModel() {
                     }
                 products.addAll(quote.mapToProductList())
                 Log.e("Mercadona", quote.toString())
+                withContext(Dispatchers.IO) {
+                    MercadonaService().saveProductHistory(quote)
+                }
             } catch (ex: Exception) {
                 Log.d("Mercadona Error", ex.toString())
             }
@@ -326,10 +358,13 @@ class SearchScreemViewModel : ViewModel() {
     }
 
     fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        _intennetCoexion.value = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        val networkCapabilities =
+            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        _intennetCoexion.value =
+            networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

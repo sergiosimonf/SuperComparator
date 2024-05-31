@@ -1,7 +1,10 @@
 package com.tfg.supercomparator.domain.modules.model.carrefour.product
 
 import com.tfg.supercomparator.R
+import com.tfg.supercomparator.domain.modules.model.product.ItemProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.Product
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
+import java.time.LocalDate
 
 data class CarrefourProduct(
     val name: String,
@@ -40,4 +43,17 @@ fun CarrefourProduct.mapToProduct(): Product {
 
 fun List<CarrefourProduct>.mapToProductList(): List<Product> {
     return this.map { it.mapToProduct() }
+}
+
+fun List<CarrefourProduct>.toProductHistoryItems(): ProductHistoryItems {
+    val items = this.map { product ->
+        ItemProductHistory(
+            nombre = product.name,
+            price = product.price.toFloat()
+        )
+    }
+    return ProductHistoryItems(
+        fecha = LocalDate.now().toString(),
+        products = items
+    )
 }

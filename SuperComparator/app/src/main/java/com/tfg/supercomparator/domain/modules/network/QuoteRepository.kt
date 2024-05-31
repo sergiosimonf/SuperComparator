@@ -8,7 +8,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 object QuoteRepository {
 
     var apiConexion = false
-    var intennetCoexion = true
 
     fun getDiaProduct(): DiaQuoteService {
         return Retrofit.Builder()

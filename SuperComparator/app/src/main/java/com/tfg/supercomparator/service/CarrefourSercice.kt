@@ -1,7 +1,11 @@
 package com.tfg.supercomparator.service
 
 import com.tfg.supercomparator.domain.modules.model.carrefour.product.CarrefourProduct
+import com.tfg.supercomparator.domain.modules.model.carrefour.product.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
+import com.tfg.supercomparator.domain.modules.network.CarrefourQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
+import retrofit2.Response
 
 class CarrefourSercice : SearchProduct<CarrefourProduct> {
     override suspend fun findProducts(query: String): List<CarrefourProduct> {
@@ -47,5 +51,12 @@ class CarrefourSercice : SearchProduct<CarrefourProduct> {
             )
         }
         return carrefourProductList
+    }
+
+    override suspend fun saveProductHistory(product: List<CarrefourProduct>): Response<ProductHistoryItems> {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(CarrefourQuoteService::class.java)
+            .saveHistory(product.toProductHistoryItems())
     }
 }
