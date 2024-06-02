@@ -2,6 +2,7 @@ package com.tfg.supercomparator.service
 
 import com.tfg.supercomparator.domain.modules.model.carrefour.product.CarrefourProduct
 import com.tfg.supercomparator.domain.modules.model.carrefour.product.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
 import com.tfg.supercomparator.domain.modules.network.CarrefourQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
@@ -51,6 +52,13 @@ class CarrefourSercice : SearchProduct<CarrefourProduct> {
             )
         }
         return carrefourProductList
+    }
+
+    override suspend fun getProductHistory(productName: String): ProductHistory {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(CarrefourQuoteService::class.java)
+            .getCarrefourProductHistory(productName)
     }
 
     override suspend fun saveProductHistory(product: List<CarrefourProduct>): Response<ProductHistoryItems> {

@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import com.tfg.supercomparator.domain.modules.analytics.AnalyticsManager
 import com.tfg.supercomparator.domain.modules.auth.AuthManager
 import com.tfg.supercomparator.domain.modules.auth.AuthRes
-import com.tfg.supercomparator.service.AhorramasServices
+import com.tfg.supercomparator.service.AhorramasService
 import com.tfg.supercomparator.ui.navigation.AppScreens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ class LoginViewModel : ViewModel() {
         _passwordMode.value = _passwordMode.value?.not()
     }
 
-    private val ahorramas = AhorramasServices()
+    private val ahorramas = AhorramasService()
 
     fun getQuote() = viewModelScope.launch {
         val quote =

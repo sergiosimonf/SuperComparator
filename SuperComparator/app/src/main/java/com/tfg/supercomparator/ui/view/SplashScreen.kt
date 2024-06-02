@@ -34,8 +34,6 @@ import retrofit2.HttpException
 @Composable
 fun SplashScreen(navController: NavController, authManager: AuthManager) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
     val user: FirebaseUser? = authManager.getCurrentUser()
 
     LaunchedEffect(key1 = true) {

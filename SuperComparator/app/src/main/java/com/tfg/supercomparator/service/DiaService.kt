@@ -3,6 +3,7 @@ package com.tfg.supercomparator.service
 import android.util.Log
 import com.tfg.supercomparator.domain.modules.model.dia.product.DiaProduct
 import com.tfg.supercomparator.domain.modules.model.dia.product.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
 import com.tfg.supercomparator.domain.modules.network.DiaQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
@@ -31,6 +32,13 @@ class DiaService : SearchProduct<DiaProduct> {
         }
 
         return diaProductList
+    }
+
+    override suspend fun getProductHistory(productName: String): ProductHistory {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(DiaQuoteService::class.java)
+            .getDiaProductHistory(productName)
     }
 
     override suspend fun saveProductHistory(product: List<DiaProduct>): Response<ProductHistoryItems> {

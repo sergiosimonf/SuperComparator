@@ -2,6 +2,7 @@ package com.tfg.supercomparator.service
 
 import com.tfg.supercomparator.domain.modules.model.eroski.EroskiProduct
 import com.tfg.supercomparator.domain.modules.model.eroski.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
 import com.tfg.supercomparator.domain.modules.network.EroskiQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
@@ -33,6 +34,13 @@ class EroskiService : SearchProduct<EroskiProduct> {
             )
         }
         return eroskiProductList
+    }
+
+    override suspend fun getProductHistory(productName: String): ProductHistory {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(EroskiQuoteService::class.java)
+            .getEroskiProductHistory(productName)
     }
 
     override suspend fun saveProductHistory(product: List<EroskiProduct>): Response<ProductHistoryItems> {

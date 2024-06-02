@@ -32,6 +32,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -79,16 +81,8 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
-private var data =
-    mutableMapOf(
-        LocalDate.parse("2022-07-01") to 2f,
-        LocalDate.parse("2022-07-09") to 6f,
-//        LocalDate.parse("2022-07-04") to 4f,
-    )
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun ProductScreen(
     viewModel: ProductViewModel = viewModel(),
     navController: NavHostController,
@@ -98,20 +92,19 @@ fun ProductScreen(
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
     val product = viewModel.state!!
     val modelProducer = remember { CartesianChartModelProducer.build() }
+    val data by viewModel.data.observeAsState(initial = emptyMap())
 
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.Default) {
-            val xToDates = data.keys.associateBy { it.toEpochDay().toFloat() }
-            modelProducer.tryRunTransaction {
-                lineSeries { series(xToDates.keys, data.values) }
-                updateExtras { it[xToDateMapKey] = xToDates }
+    if (data.isNotEmpty()){
+        LaunchedEffect(Unit) {
+            withContext(Dispatchers.Default) {
+                val xToDates = data.keys.associateBy { it.toEpochDay().toFloat() }
+                modelProducer.tryRunTransaction {
+                    lineSeries { series(xToDates.keys, data.values) }
+                    updateExtras { it[xToDateMapKey] = xToDates }
+                }
             }
         }
     }
-
-
-    data.put(LocalDate.parse("2022-07-04"), 4f)
-    data.put(LocalDate.parse("2022-07-15"), 3f)
 
     Scaffold(
         topBar = {
@@ -274,7 +267,7 @@ fun ProductScreen(
                     Box(modifier = Modifier
                         .padding(20.dp)
                         .fillMaxSize()){
-                        ChartHistoryPrice(modelProducer = modelProducer, modifier = Modifier)
+                        ChartHistoryPrice(modelProducer = modelProducer, modifier = Modifier, data)
                     }
                 }
             }
@@ -286,6 +279,7 @@ fun ProductScreen(
 private fun ChartHistoryPrice(
     modelProducer: CartesianChartModelProducer,
     modifier: Modifier,
+    data: Map<LocalDate, Float>,
 ) {
     val marker = rememberMarker()
     val uiColor =if (isSystemInDarkTheme()) DarkGreen else Green
@@ -297,7 +291,7 @@ private fun ChartHistoryPrice(
             bottomAxis = rememberBottomAxis(
                 valueFormatter = bottomAxisValueFormatter,
             ),
-            decorations = listOf(rememberComposeHorizontalLine())
+            decorations = listOf(rememberComposeHorizontalLine(data))
         ),
         modelProducer = modelProducer,
         modifier = modifier,
@@ -326,7 +320,7 @@ private fun OfferBadge(priceNoOfert: Double?, priceOfert: Double?) {
 }
 
 @Composable
-private fun rememberComposeHorizontalLine(): HorizontalLine {
+private fun rememberComposeHorizontalLine(data: Map<LocalDate, Float>): HorizontalLine {
 
     val HORIZONTAL_LINE_THICKNESS_DP = 2f
     val HORIZONTAL_LINE_LABEL_HORIZONTAL_PADDING_DP = 8f

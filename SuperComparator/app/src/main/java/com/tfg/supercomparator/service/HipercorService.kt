@@ -2,6 +2,7 @@ package com.tfg.supercomparator.service
 
 import com.tfg.supercomparator.domain.modules.model.hipercor.HipercorProduct
 import com.tfg.supercomparator.domain.modules.model.hipercor.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
 import com.tfg.supercomparator.domain.modules.network.HipercorQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
@@ -13,6 +14,14 @@ class HipercorService : SearchProduct<HipercorProduct> {
             .getSupercomparatorAPIClient()
             .create(HipercorQuoteService::class.java)
             .getHipercorProduct(query)
+    }
+
+
+    override suspend fun getProductHistory(productName: String): ProductHistory {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(HipercorQuoteService::class.java)
+            .getHipercorProductHistory(productName)
     }
 
     override suspend fun saveProductHistory(product: List<HipercorProduct>): Response<ProductHistoryItems> {

@@ -3,12 +3,13 @@ package com.tfg.supercomparator.service
 import android.util.Log
 import com.tfg.supercomparator.domain.modules.model.ahorramas.AhorramasProudct
 import com.tfg.supercomparator.domain.modules.model.ahorramas.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
 import com.tfg.supercomparator.domain.modules.network.AhorramasQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
 import retrofit2.Response
 
-class AhorramasServices : SearchProduct<AhorramasProudct> {
+class AhorramasService : SearchProduct<AhorramasProudct> {
 
     override suspend fun findProducts(query: String): List<AhorramasProudct> {
         val call = QuoteRepository.getAhorramasProduct(query)
@@ -48,6 +49,13 @@ class AhorramasServices : SearchProduct<AhorramasProudct> {
             ahorramasProduct?.let { products.add(it) }
         }
         return products
+    }
+
+    override suspend fun getProductHistory(productName: String): ProductHistory {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(AhorramasQuoteService::class.java)
+            .getAhorramasProductHistory(productName)
     }
 
     override suspend fun saveProductHistory(product: List<AhorramasProudct>): Response<ProductHistoryItems> {

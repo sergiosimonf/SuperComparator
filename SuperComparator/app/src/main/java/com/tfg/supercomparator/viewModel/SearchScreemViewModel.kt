@@ -18,7 +18,7 @@ import com.tfg.supercomparator.domain.modules.model.hipercor.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.mercadona.mapToProductList
 import com.tfg.supercomparator.domain.modules.model.product.Product
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
-import com.tfg.supercomparator.service.AhorramasServices
+import com.tfg.supercomparator.service.AhorramasService
 import com.tfg.supercomparator.service.AlcampoService
 import com.tfg.supercomparator.service.CarrefourSercice
 import com.tfg.supercomparator.service.DiaService
@@ -161,13 +161,13 @@ class SearchScreemViewModel : ViewModel() {
         viewModelScope.async(Dispatchers.IO) {
             try {
                 val quote =
-                    withContext(Dispatchers.IO) { AhorramasServices().findProducts(query) }
+                    withContext(Dispatchers.IO) { AhorramasService().findProducts(query) }
                 Log.e("Response", quote.toString())
                 products.addAll(quote.mapToProductList())
                 Log.e("Ahorrams", quote.toString())
                 if (QuoteRepository.apiConexion) {
                     withContext(Dispatchers.IO) {
-                        val response = AhorramasServices().saveProductHistory(quote)
+                        val response = AhorramasService().saveProductHistory(quote)
                         Log.d("Ahorramas response", response.errorBody().toString())
                     }
                 }

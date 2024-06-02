@@ -2,6 +2,7 @@ package com.tfg.supercomparator.service
 
 import com.tfg.supercomparator.domain.modules.model.mercadona.MercadonaProduct
 import com.tfg.supercomparator.domain.modules.model.mercadona.toProductHistoryItems
+import com.tfg.supercomparator.domain.modules.model.product.ProductHistory
 import com.tfg.supercomparator.domain.modules.model.product.ProductHistoryItems
 import com.tfg.supercomparator.domain.modules.network.MercadonaQuoteService
 import com.tfg.supercomparator.domain.modules.network.QuoteRepository
@@ -13,6 +14,13 @@ class MercadonaService : SearchProduct<MercadonaProduct> {
             .getSupercomparatorAPIClient()
             .create(MercadonaQuoteService::class.java)
             .getMercadonaProduct(query)
+    }
+
+    override suspend fun getProductHistory(productName: String): ProductHistory {
+        return QuoteRepository
+            .getSupercomparatorAPIClient()
+            .create(MercadonaQuoteService::class.java)
+            .getMercadonaProductHistory(productName)
     }
 
     override suspend fun saveProductHistory(product: List<MercadonaProduct>): Response<ProductHistoryItems> {

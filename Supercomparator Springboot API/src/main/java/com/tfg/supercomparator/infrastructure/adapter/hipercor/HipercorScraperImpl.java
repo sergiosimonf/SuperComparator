@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.tfg.supercomparator.domain.hipercor.HipercorProduct;
 import com.tfg.supercomparator.infrastructure.scraper.DriverSupplier;
 import com.tfg.supercomparator.infrastructure.scraper.hipercor.HipercorScraper;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@Slf4j
 public class HipercorScraperImpl extends DriverSupplier implements HipercorScraper {
 
     private static final int TAMAÑO_IMAGEN = 325;
@@ -23,9 +25,13 @@ public class HipercorScraperImpl extends DriverSupplier implements HipercorScrap
 
     private static double getPrecioPorUnidad(JsonObject price) {
         JsonObject pumPrice = price.getAsJsonObject("pum_price_v2");
-        int intPrice = pumPrice.getAsJsonPrimitive("integerPart").getAsInt();
-        int decimalPrice = pumPrice.getAsJsonPrimitive("decimalPart").getAsInt();
-        return Double.parseDouble(intPrice + "." + decimalPrice);
+        try {
+            int intPrice = pumPrice.getAsJsonPrimitive("integerPart").getAsInt();
+            int decimalPrice = pumPrice.getAsJsonPrimitive("decimalPart").getAsInt();
+            return Double.parseDouble(intPrice + "." + decimalPrice);
+        } catch (NullPointerException e) {
+            return 0.0;
+        }
     }
 
     private static String getImageUrl(JsonObject product) {
@@ -45,9 +51,13 @@ public class HipercorScraperImpl extends DriverSupplier implements HipercorScrap
     }
 
     private static String getPrecioPorUnidadText(JsonObject price, double precioPorUnidad) {
-        JsonObject pumPrice = price.getAsJsonObject("pum_price_v2");
-        String priceType = pumPrice.getAsJsonPrimitive("type").getAsString().trim();
-        return precioPorUnidad + " €" + priceType;
+        try {
+            JsonObject pumPrice = price.getAsJsonObject("pum_price_v2");
+            String priceType = pumPrice.getAsJsonPrimitive("type").getAsString().trim();
+            return precioPorUnidad + " €" + priceType;
+        } catch (ClassCastException | NullPointerException e) {
+            return "";
+        }
     }
 
     public List<HipercorProduct> searchProduct(String productQuery) {
