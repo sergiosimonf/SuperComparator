@@ -1,1 +1,1 @@
-# SuperCompareitor
+# SuperComparator

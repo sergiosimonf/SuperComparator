@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -88,7 +89,7 @@ fun LoginScreen(
         when (val account =
             auth.handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(result.data))) {
             is AuthRes.Success -> {
-                val credential = GoogleAuthProvider.getCredential(account?.data?.idToken, null)
+                val credential = GoogleAuthProvider.getCredential(account.data.idToken, null)
                 scope.launch {
                     val fireUser = auth.signInWithGoogleCredential(credential)
                     if (fireUser != null) {
@@ -114,10 +115,12 @@ fun LoginScreen(
     }
 
 
-    Surface(color = uiColor) {
+    Surface(
+        color = uiColor,
+    ) {
         Column(
-//            contentAlignment = Alignment.TopCenter
-            modifier = Modifier.verticalScroll(rememberScrollState()),
+            modifier = Modifier
+                .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
@@ -125,15 +128,15 @@ fun LoginScreen(
             Card(
                 shape = RoundedCornerShape(topStart = 45.dp, topEnd = 45.dp),
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxHeight()
                     .padding(top = 40.dp)
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 25.dp),
-//                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 25.dp)
+                        .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     LoginSection(viewModel, auth, analytics, scope, context, navController)

@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -17,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tfg.supercomparator.domain.modules.data.AppDatabase
 import com.tfg.supercomparator.domain.modules.model.product.Product
@@ -38,8 +40,6 @@ fun FavoriteScreen(
 ) {
 //    analytics.LogScreenView(screenName = AppScreens.LOGIN.ruta)
     val uiColor = if (isSystemInDarkTheme()) DarkGreen else Green
-
-
     val scope = rememberCoroutineScope()
     val refreshing by viewModel.refreshing.observeAsState(initial = false)
     val favProducts: List<Product> by viewModel.favProducts.observeAsState(initial = listOf())
@@ -54,7 +54,10 @@ fun FavoriteScreen(
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
 
-    Box(Modifier.pullRefresh(state)) {
+    Box(Modifier
+        .pullRefresh(state)
+        .padding(top = 25.dp)
+    ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.Start,

@@ -1,0 +1,28 @@
+services:
+  supercomparator-api:
+    container_name: supercomparator-api
+    image: ${DOCKER_REPO_NAME}/supercomparator-api:latest
+    volumes: 
+      - ./configuration:/config
+    ports:
+      - "8080:8080"
+    networks:
+      - supercomparator-network
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - supercomparator-network
+
+networks:
+  supercomparator-network:
+    external: true
+
+volumes:
+  mongo_data:
+    driver: local

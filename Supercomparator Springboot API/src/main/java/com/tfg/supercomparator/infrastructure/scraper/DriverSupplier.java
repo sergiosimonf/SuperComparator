@@ -7,7 +7,7 @@ public abstract class DriverSupplier {
     public FirefoxDriver getDriver() {
         FirefoxOptions firefoxOptions = new FirefoxOptions();
         firefoxOptions.addArguments("--headless");
-        System.setProperty("webdriver.gecko.driver", "src/main/resources/driver/geckodriver.exe");
+        System.setProperty("webdriver.gecko.driver", "driver/geckodriver");
         return new FirefoxDriver(firefoxOptions);
     }
 }
